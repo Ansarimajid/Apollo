@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login - Notes Portal</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{%  static '/image/favicon1.ico' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<style>
+    /* Define your CSS styles for the header */
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        /* background-image: linear-gradient(to right top,rgb(217, 217, 217), rgb(128 209 123), rgb(0 197 7), rgb(84 207 85), rgb(188, 232, 236)); */
+        background-color: #0fc220;
+        padding: 10px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .social-icons {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .social-icons li {
+        display: inline-block;
+        margin-left: 10px;
+    }
+
+    .social-icons li a {
+        color: white;
+        text-decoration: none;
+        font-size: 20px;
+    }
+
+    body {
+        margin-top: 60px; /* Adjust the margin-top value to leave space for the fixed header */
+    }
+</style>
+
+<body class="hold-transition login-page" style="background-image: url('{% static 'dist/img/bg.jpg' %}'); background-size: cover;">
+
+    <header>
+        <div>
+        <h1 style="margin-left: 50px;">SK Academy</h1>
+    </div>
+    <ul class="social-icons">
+        <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+        <li><a href="#"><i class="fas fa-phone"></i></a></li>
+        <li><a href="#"><i class="far fa-envelope"></i></a></li>
+        <li><a href="#"><i class="fab fa-whatsapp"></i></a></li>
+        <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+        <!-- Add more social media icons as needed -->
+    </ul>
+    
+    </header>
+    <div class="login-box">
+        <!-- /.login-logo -->
+        <div class="card" style="  background-color: #ffffff81;">
+            <div class="card-body login-card-body" style="  background: #ffffff59;" >
+                <!-- <p class="login-box-msg">Sign in to start your session</p> -->
+                {% if messages %}
+                <div class="col-12">
+                    {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger text-center ">
+                        {{message }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <form action="doLogin/" method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input required type="email"  name='email' class="form-control" placeholder="Email" >
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input required type="password" name='password' class="form-control" placeholder="Password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="remember">
+                                <label for="remember">
+                                    Remember Me
+                                </label>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-success btn-block">Log In</button>
+                        </div>
+
+
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+
+                <p class="mb-1">
+                    <a style="color: rgb(180, 3, 3);" href="{% url 'password_reset' %}">Not a Student?</a>
+                </p>
+
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <!-- /.login-box -->
+
+    <!-- jQuery -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+
+</body>
+
+</html>
