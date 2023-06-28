@@ -65,7 +65,7 @@
     .swal2-popup.swal2-toast .swal2-styled:focus {
       box-shadow: 0 0 0 0.0625em #fff, 0 0 0 0.125em none; }
   .swal2-popup.swal2-toast .swal2-success {
-    border-color: #28a745; }
+    border-color: #0fc220; }
     .swal2-popup.swal2-toast .swal2-success [class^='swal2-success-circular-line'] {
       position: absolute;
       width: 1.6em;
@@ -535,7 +535,7 @@
     .swal2-icon.swal2-question.swal2-arabic-question-mark::before {
       content: '؟'; }
   .swal2-icon.swal2-success {
-    border-color: #28a745; }
+    border-color: #0fc220; }
     .swal2-icon.swal2-success [class^='swal2-success-circular-line'] {
       position: absolute;
       width: 3.75em;
@@ -578,7 +578,7 @@
       z-index: 2;
       height: .3125em;
       border-radius: .125em;
-      background-color: #28a745; }
+      background-color: #0fc220; }
       .swal2-icon.swal2-success [class^='swal2-success-line'][class$='tip'] {
         top: 2.875em;
         left: .875em;
