@@ -1,28 +1,12 @@
-import json
-import requests
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render, reverse
-from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth import login, logout
+from django.shortcuts import redirect, render, reverse
 from .EmailBackend import EmailBackend
 from functools import wraps
-from django.shortcuts import redirect, reverse
-
 from django.contrib.auth import logout
-from django.contrib.sessions.backends.db import SessionStore
-from django.contrib.auth import logout
-
-from django.contrib.auth import logout
-
-from django.contrib.auth import logout
-
-from functools import wraps
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .EmailBackend import EmailBackend
+from django.http import HttpResponse
 
 def require_fee_payment(view_func):
     @wraps(view_func)
