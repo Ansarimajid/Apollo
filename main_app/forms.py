@@ -64,6 +64,7 @@ class CustomUserForm(FormSettings):
 class StudentForm(CustomUserForm):
     board = forms.ChoiceField(choices=Student.BOARD_CHOICES)
     stream = forms.ChoiceField(choices=Student.STREAM_CHOICES)
+    grade = forms.ChoiceField(choices=Student.GRADE_CHOICES)
 
     def __init__(self, *args, **kwargs):
         super(StudentForm, self).__init__(*args, **kwargs)
