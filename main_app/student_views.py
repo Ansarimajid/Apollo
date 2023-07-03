@@ -65,3 +65,14 @@ def student_view_profile(request):
             messages.error(request, "Error Occured While Updating Profile " + str(e))
 
     return render(request, "student_template/student_view_profile.html", context)
+
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+
+def pdf_view(request, note_id):
+    note = get_object_or_404(Note, pk=note_id)
+
+    response = render(request, 'student_template/pdf_view.html', {'note': note})
+    response['X-Frame-Options'] = 'SAMEORIGIN'
+
+    return response

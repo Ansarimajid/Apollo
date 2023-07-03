@@ -126,12 +126,29 @@ def save_user_profile(sender, instance, **kwargs):
         instance.student.save()
 
 
+import os
+from django.db import models
+from django.contrib.auth import get_user_model
+
+CustomUser = get_user_model()
+
+def generate_file_path(instance, filename):
+    # Get the filename extension
+    ext = filename.split('.')[-1]
+
+    # Generate a unique filename
+    unique_filename = f"{instance.pk}.{ext}"
+
+    # Return the custom file path
+    return os.path.join('notes', unique_filename)
+
 class Note(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    file = models.FileField(upload_to='notes/')
+    file = models.FileField(upload_to=generate_file_path)
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.title
+

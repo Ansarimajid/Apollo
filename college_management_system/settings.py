@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'main_app.apps.MainAppConfig'
 ]
 
+X_FRAME_OPTIONS = 'ALLOWALL'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -54,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Remove 'django.middleware.clickjacking.XFrameOptionsMiddleware' from the list
 
     # Third Part Middleware
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -62,6 +64,7 @@ MIDDLEWARE = [
     # My Middleware
     'main_app.middleware.LoginCheckMiddleWare',
 ]
+
 
 ROOT_URLCONF = 'college_management_system.urls'
 
