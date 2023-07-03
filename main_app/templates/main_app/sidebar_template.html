@@ -95,12 +95,23 @@
                 </li>
 
                 <li class="nav-item">
+                    {% url 'upload_staff_note' as upload_staff_note %}
+                    <a href="{{upload_staff_note}}"
+                        class="nav-link {% if upload_staff_note == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-upload"></i>
+                        <p>
+                            Notes for Staff
+                        </p>
+                    </a>
+                </li>  
+
+                <li class="nav-item">
                     {% url 'upload_note' as upload_note %}
                     <a href="{{upload_note}}"
                         class="nav-link {% if upload_note == request.path %} active {% endif %}">
                         <i class="nav-icon fas fa-upload"></i>
                         <p>
-                            Upload Notes
+                            Notes for Student
                         </p>
                     </a>
                 </li>   
@@ -153,7 +164,18 @@
 
                                     </p>
                                 </a>
-                            </li>                     
+                            </li>   
+                            <li class="nav-item">
+                                {% url 'view_staff_notes' as view_staff_notes %}
+                                <a href="{{view_staff_notes}}"
+                                    class="nav-link {% if view_staff_notes == request.path %} active {% endif %}">
+                                    <i class="nav-icon fas 	fas fa-atlas"></i>
+                                    <p>
+                                        View Notes
+
+                                    </p>
+                                </a>
+                            </li>                  
 
 
                             {% else %}

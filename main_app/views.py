@@ -89,7 +89,7 @@ def doLogin(request, **kwargs):
             return redirect("/")
 
 def payment_required(request):
-    return HttpResponse("payment Required")
+    return HttpResponse("Profile has been locked, Kindly connect with tech team.")
 
 
 def logout_user(request):

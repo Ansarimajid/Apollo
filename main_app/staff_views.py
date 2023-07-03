@@ -12,6 +12,11 @@ from .models import *
 from . import forms, models
 from datetime import date
 
+def view_staff_notes(request):
+    notes = StaffNote.objects.all()
+    return render(request, 'staff_template/view_staff_notes.html', {'page_title': 'View Notes','notes': notes})
+
+
 def staff_home(request):
     staff = get_object_or_404(Staff, admin=request.user)
     total_students = Student.objects.count()

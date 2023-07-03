@@ -135,3 +135,13 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
+
+class StaffNote(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    file = models.FileField(upload_to='staff_notes/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return self.title

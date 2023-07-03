@@ -35,12 +35,13 @@ urlpatterns = [
      path('payment-required/', views.payment_required, name='payment_required'),
      path('changestatus/<int:student_id>/', hod_views.change_payment_status, name='change_payment_status'),
           path('admin/upload_notes/', hod_views.upload_note, name='upload_note'),
+          path('admin/upload_staff_notes/', hod_views.upload_staff_note, name='upload_staff_note'),
 
 
      # Staff
      path("staff/home/", staff_views.staff_home, name='staff_home'),
      path("staff/view/profile/", staff_views.staff_view_profile,name='staff_view_profile'),
-
+    path('staff/view_staff_notes/', staff_views.view_staff_notes, name='view_staff_notes'),
 
 
      # Student

@@ -169,6 +169,16 @@ def upload_note(request):
         form = NoteForm()
     return render(request, 'hod_template/upload_note.html', { 'page_title': 'Upload Notes','form': form})
 
+def upload_staff_note(request):
+    if request.method == 'POST':
+        form = StaffNoteForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('view_notes')
+    else:
+        form = StaffNoteForm()
+    return render(request, 'hod_template/upload_staff_note.html', { 'page_title': 'Upload Staff Notes','form': form})
+
 
 def edit_staff(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)

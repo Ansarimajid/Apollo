@@ -16,6 +16,11 @@ class NoteForm(forms.ModelForm):
         model = Note
         fields = ('title', 'description', 'file')
 
+class StaffNoteForm(forms.ModelForm):
+    class Meta:
+        model = StaffNote
+        fields = ('title', 'description', 'file')
+
 class CustomUserForm(FormSettings):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(required=True)
