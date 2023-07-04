@@ -75,9 +75,18 @@ class Student(models.Model):
     )
 
     GRADE_CHOICES = (
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
+        ('1st', '1st'),
+        ('2nd', '2nd'),
+        ('3rd', '3rd'),
+        ('4th', '4th'),
+        ('5th', '5th'),
+        ('6th', '6th'),
+        ('7th', '7th'),
+        ('8th', '8th'),
+        ('9th', '9th'),
+        ('10th', '10th'),
+        ('11th', '11th'),
+        ('12th', '12th'),
         # Add more choices as needed
     )
 
@@ -139,6 +148,8 @@ class Note(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
                                     default=1)
+    grade = models.CharField(max_length=10, choices=Student.GRADE_CHOICES,
+                             default=1)
 
     def __str__(self):
         return self.title

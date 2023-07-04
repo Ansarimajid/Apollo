@@ -13,7 +13,7 @@ class FormSettings(forms.ModelForm):
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
-        fields = ('title', 'description', 'file')
+        fields = ('title', 'description', 'file', 'grade')
 
 
 class StaffNoteForm(forms.ModelForm):
