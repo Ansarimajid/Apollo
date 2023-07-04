@@ -17,9 +17,14 @@ class NoteForm(forms.ModelForm):
 
 
 class StaffNoteForm(forms.ModelForm):
+    shared_with = forms.ModelMultipleChoiceField(
+        queryset=Staff.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
+
     class Meta:
         model = StaffNote
-        fields = ('title', 'description', 'file')
+        fields = ('title', 'description', 'file', 'shared_with')
 
 
 class CustomUserForm(FormSettings):

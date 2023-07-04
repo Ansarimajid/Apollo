@@ -1,12 +1,19 @@
 from django.shortcuts import get_object_or_404, render
 from .forms import StaffEditForm
-from .models import StaffNote, Staff, Student
+from .models import Staff, Student
+from django.http import HttpResponse
 
 
 def view_staff_notes(request):
-    notes = StaffNote.objects.all()
-    return render(request, 'staff_template/view_staff_notes.html',
-                  {'page_title': 'View Notes', 'notes': notes})
+    user = request.user  # Get the current user
+    if user.is_authenticated and user.user_type == '2':
+        staff = user.staff  # Get the staff instance
+        notes = staff.staffnote_set.all()
+        return render(request, 'staff_template/view_staff_notes.html',
+                      {'page_title': 'View Notes', 'notes': notes})
+    else:
+        # Handle the case if the user is not authenticated or not a staff
+        return HttpResponse("You are not authorized to view this page.")
 
 
 def staff_home(request):

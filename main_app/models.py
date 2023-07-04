@@ -162,6 +162,7 @@ class StaffNote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
                                     default=1)
+    shared_with = models.ManyToManyField(Staff)
 
     def __str__(self):
         return self.title
