@@ -48,12 +48,11 @@ class CustomUser(AbstractUser):
         except Student.DoesNotExist:
             return False
 
-
     def save(self, *args, **kwargs):
-        is_new = self._state.adding  # Check if it's a new instance being created
+        is_new = self._state.adding  # new instance being created
         super().save(*args, **kwargs)
         if is_new and self.user_type == '3':
-            Student.objects.create(admin=self)  # Create a new associated Student instance
+            Student.objects.create(admin=self)  # Create Student instance
 
 
 class Admin(models.Model):
@@ -96,16 +95,17 @@ class Student(models.Model):
 
 class Staff(models.Model):
     DESIGNATION_CHOICES = (
-        ('Assistent', 'Assistent'),
+        ('Assistant', 'Assistant'),
         ('Teacher', 'Teacher'),
         ('Faculty', 'Faculty'),
     )
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     phone_no = models.CharField(max_length=20)
     alternate_phone_no = models.CharField(max_length=20)
-    designation = models.CharField(max_length=100,choices=DESIGNATION_CHOICES)
-    mon_sal = models.IntegerField(null=True,blank=True)
-    year_sal = models.IntegerField(null=True,blank=True)
+    designation = models.CharField(max_length=100,
+                                   choices=DESIGNATION_CHOICES)
+    mon_sal = models.IntegerField(null=True, blank=True)
+    year_sal = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.admin.first_name + " " + self.admin.last_name
@@ -137,17 +137,20 @@ class Note(models.Model):
     description = models.TextField()
     file = models.FileField(upload_to='notes/')
     created_at = models.DateTimeField(auto_now_add=True)
-    uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+    uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+                                    default=1)
 
     def __str__(self):
         return self.title
+
 
 class StaffNote(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     file = models.FileField(upload_to='staff_notes/')
     created_at = models.DateTimeField(auto_now_add=True)
-    uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+    uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+                                    default=1)
 
     def __str__(self):
         return self.title

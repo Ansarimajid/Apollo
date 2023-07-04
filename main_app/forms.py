@@ -1,5 +1,6 @@
 from django import forms
-from .models import *
+from .models import Note, StaffNote, CustomUser, Student, Admin, Staff
+
 
 class FormSettings(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -8,15 +9,18 @@ class FormSettings(forms.ModelForm):
         for field in self.visible_fields():
             field.field.widget.attrs['class'] = 'form-control'
 
+
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = ('title', 'description', 'file')
 
+
 class StaffNoteForm(forms.ModelForm):
     class Meta:
         model = StaffNote
         fields = ('title', 'description', 'file')
+
 
 class CustomUserForm(FormSettings):
     email = forms.EmailField(required=True)
@@ -36,20 +40,22 @@ class CustomUserForm(FormSettings):
             for field in CustomUserForm.Meta.fields:
                 self.fields[field].initial = instance.get(field)
             if self.instance.pk is not None:
-                self.fields['password'].widget.attrs['placeholder'] = "Fill this only if you wish to update password"
+                self.fields['password'].widget.attrs['placeholder'] = "Fill" \
+                    " this only if you wish to update password"
 
     def clean_email(self, *args, **kwargs):
         formEmail = self.cleaned_data['email'].lower()
         if self.instance.pk is None:  # Insert
             if CustomUser.objects.filter(email=formEmail).exists():
-                raise forms.ValidationError(
-                    "The given email is already registered")
+                raise forms.ValidationError("The given email" +
+                                            " is already registered")
         else:  # Update
-            dbEmail = self.Meta.model.objects.get(
-                id=self.instance.pk).admin.email.lower()
-            if dbEmail != formEmail:  # There has been changes
+            dbEmail = self.Meta.model.objects.get(id=self.instance.pk)\
+                .admin.email.lower()
+            if dbEmail != formEmail:  # There have been changes
                 if CustomUser.objects.filter(email=formEmail).exists():
-                    raise forms.ValidationError("The given email is already registered")
+                    raise forms.ValidationError("The given email" +
+                                                " is already registered")
 
         return formEmail
 
@@ -68,7 +74,9 @@ class StudentForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields + ['phone_no','alternate_phone_no','board', 'stream','grade']
+        fields = CustomUserForm.Meta.fields + ['phone_no',
+                                               'alternate_phone_no',
+                                               'board', 'stream', 'grade']
 
 
 class AdminForm(CustomUserForm):
@@ -86,7 +94,10 @@ class StaffForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Staff
-        fields = CustomUserForm.Meta.fields + ['phone_no','alternate_phone_no','designation', 'mon_sal','year_sal']
+        fields = CustomUserForm.Meta.fields + ['phone_no',
+                                               'alternate_phone_no',
+                                               'designation',
+                                               'mon_sal', 'year_sal']
 
 
 class StudentEditForm(CustomUserForm):
@@ -95,7 +106,9 @@ class StudentEditForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields + ['phone_no','alternate_phone_no','board', 'stream','grade']
+        fields = CustomUserForm.Meta.fields + ['phone_no',
+                                               'alternate_phone_no',
+                                               'board', 'stream', 'grade']
 
 
 class StaffEditForm(CustomUserForm):
@@ -104,7 +117,7 @@ class StaffEditForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Staff
-        fields = CustomUserForm.Meta.fields + ['phone_no','alternate_phone_no','designation', 'mon_sal','year_sal']
-
-
-
+        fields = CustomUserForm.Meta.fields + ['phone_no',
+                                               'alternate_phone_no',
+                                               'designation',
+                                               'mon_sal', 'year_sal']
