@@ -1,22 +1,17 @@
 from django.contrib import messages
-from django.http import HttpResponse
 from django.shortcuts import (HttpResponse,
                               get_object_or_404, redirect, render)
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from .forms import *
-from .models import *
+from .forms import StaffForm, StudentForm, StaffNoteForm, NoteForm, AdminForm
+from .models import Student, Staff, CustomUser, Admin
 
 
 def admin_home(request):
     total_staff = Staff.objects.all().count()
     total_students = Student.objects.all().count()
-    
-
 
     # For Students
-
-    students = Student.objects.all()
 
     context = {
         'page_title': "Administrative Dashboard",
@@ -40,16 +35,19 @@ def add_staff(request):
             designation = form.cleaned_data.get('designation')
             mon_sal = form.cleaned_data.get('mon_sal')
             year_sal = form.cleaned_data.get('year_sal')
-            
             try:
                 user = CustomUser.objects.create_user(
-                    email=email, password=password, user_type=2, first_name=first_name, last_name=last_name)
-                
+                    email=email, password=password, user_type=2,
+                    first_name=first_name, last_name=last_name)
+
                 staff, created = Staff.objects.get_or_create(
                     admin_id=user.id,
-                    defaults={'phone_no': phone_no, 'alternate_phone_no': alternate_phone_no, 'designation': designation, 'mon_sal': mon_sal, 'year_sal': year_sal}
+                    defaults={'phone_no': phone_no,
+                              'alternate_phone_no': alternate_phone_no,
+                              'designation': designation,
+                              'mon_sal': mon_sal, 'year_sal': year_sal}
                 )
-                
+
                 if not created:
                     staff.phone_no = phone_no
                     staff.alternate_phone_no = alternate_phone_no
@@ -57,13 +55,13 @@ def add_staff(request):
                     staff.mon_sal = mon_sal
                     staff.year_sal = year_sal
                     staff.save()
-                
+
                 messages.success(request, "Successfully Added")
                 return redirect(reverse('add_staff'))
-        
+
             except Exception as e:
                 messages.error(request, "Could Not Add: " + str(e))
-        
+
         else:
             messages.error(request, "Please fulfill all requirements")
     print(request.POST)
@@ -80,16 +78,20 @@ def add_student(request):
             email = student_form.cleaned_data.get('email')
             password = student_form.cleaned_data.get('password')
             phone_no = student_form.cleaned_data.get('phone_no')
-            alternate_phone_no = student_form.cleaned_data.get('alternate_phone_no')
+            alternate_phone_no = \
+                student_form.cleaned_data.get('alternate_phone_no')
             board = student_form.cleaned_data.get('board')
             stream = student_form.cleaned_data.get('stream')
             grade = student_form.cleaned_data.get('grade')
             try:
                 user = CustomUser.objects.create_user(
-                    email=email, password=password, user_type=3, first_name=first_name, last_name=last_name)
+                    email=email, password=password, user_type=3,
+                    first_name=first_name, last_name=last_name)
                 student, created = Student.objects.get_or_create(
                     admin_id=user.id,
-                    defaults={'phone_no': phone_no, 'alternate_phone_no': alternate_phone_no, 'board': board, 'stream': stream, 'grade': grade}
+                    defaults={'phone_no': phone_no,
+                              'alternate_phone_no': alternate_phone_no,
+                              'board': board, 'stream': stream, 'grade': grade}
                 )
                 if not created:
                     # Update the existing student record
@@ -117,6 +119,7 @@ def manage_staff(request):
     }
     return render(request, "hod_template/manage_staff.html", context)
 
+
 def manage_student(request):
     students = Student.objects.all()
     context = {
@@ -138,7 +141,6 @@ def manage_student(request):
 
     return render(request, "hod_template/manage_student.html", context)
 
-from django.shortcuts import redirect
 
 def change_payment_status(request, student_id):
     if request.method == 'POST':
@@ -150,8 +152,9 @@ def change_payment_status(request, student_id):
             messages.success(request, 'Payment status updated successfully.')
         except Student.DoesNotExist:
             messages.error(request, 'Error updating payment status.')
-    
+
     return redirect('manage_student')
+
 
 def upload_note(request):
     if request.method == 'POST':
@@ -161,7 +164,9 @@ def upload_note(request):
             return redirect('view_notes')
     else:
         form = NoteForm()
-    return render(request, 'hod_template/upload_note.html', { 'page_title': 'Upload Notes','form': form})
+    return render(request, 'hod_template/upload_note.html',
+                  {'page_title': 'Upload Notes', 'form': form})
+
 
 def upload_staff_note(request):
     if request.method == 'POST':
@@ -171,7 +176,8 @@ def upload_staff_note(request):
             return redirect('view_notes')
     else:
         form = StaffNoteForm()
-    return render(request, 'hod_template/upload_staff_note.html', { 'page_title': 'Upload Staff Notes','form': form})
+    return render(request, 'hod_template/upload_staff_note.html',
+                  {'page_title': 'Upload Staff Notes', 'form': form})
 
 
 def edit_staff(request, staff_id):
@@ -198,7 +204,7 @@ def edit_staff(request, staff_id):
                 user = CustomUser.objects.get(id=staff.admin.id)
                 user.username = username
                 user.email = email
-                if password != None:
+                if password is not None:
                     user.set_password(password)
                 user.first_name = first_name
                 user.last_name = last_name
@@ -216,7 +222,8 @@ def edit_staff(request, staff_id):
         else:
             messages.error(request, "Please fil form properly")
     else:
-        return render(request, "hod_template/edit_staff_template.html", context)
+        return render(request, "hod_template/edit_staff_template.html",
+                      context)
 
 
 def edit_student(request, student_id):
@@ -243,7 +250,7 @@ def edit_student(request, student_id):
                 user = CustomUser.objects.get(id=student.admin.id)
                 user.username = username
                 user.email = email
-                if password != None:
+                if password is not None:
                     user.set_password(password)
                 user.first_name = first_name
                 user.last_name = last_name
@@ -261,7 +268,9 @@ def edit_student(request, student_id):
         else:
             messages.error(request, "Please Fill Form Properly!")
     else:
-        return render(request, "hod_template/edit_student_template.html", context)
+        return render(request, "hod_template/edit_student_template.html",
+                      context)
+
 
 @csrf_exempt
 def check_email_availability(request):
@@ -272,7 +281,9 @@ def check_email_availability(request):
             return HttpResponse(True)
         return HttpResponse(False)
     except Exception as e:
+        messages.error(request, str(e))
         return HttpResponse(False)
+
 
 def admin_view_profile(request):
     admin = get_object_or_404(Admin, admin=request.user)
@@ -288,7 +299,7 @@ def admin_view_profile(request):
                 last_name = form.cleaned_data.get('last_name')
                 password = form.cleaned_data.get('password') or None
                 custom_user = admin.admin
-                if password != None:
+                if password is not None:
                     custom_user.set_password(password)
                 custom_user.first_name = first_name
                 custom_user.last_name = last_name

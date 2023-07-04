@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f2zx8*lb*em*-*b+!&1lpp&$_9q9kmkar+l3x90do@s(+sr&x7'  # Consider using your secret key
+SECRET_KEY = 'f2zx8*lb*em*-*b+!&1lpp&$_9q9kmkar+l3x90do@s(+sr&x7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -68,7 +68,7 @@ ROOT_URLCONF = 'college_management_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['main_app/templates'], #My App Templates
+        'DIRS': ['main_app/templates'],  # My App Templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -110,16 +110,20 @@ if not DEBUG:
 else:
     AUTH_PASSWORD_VALIDATORS = [
         {
-            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+            'NAME': 'django.contrib.auth.password_validation.' +
+            'UserAttributeSimilarityValidator',
         },
         {
-            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'NAME': 'django.contrib.auth.password_validation.' +
+            'MinimumLengthValidator',
         },
         {
-            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'NAME': 'django.contrib.auth.password_validation.' +
+            'CommonPasswordValidator',
         },
         {
-            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'NAME': 'django.contrib.auth.password_validation.' +
+            'NumericPasswordValidator',
         },
     ]
 
@@ -158,7 +162,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = os.environ.get('majidgt786@gmail.com') 
+EMAIL_HOST_USER = os.environ.get('majidgt786@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('sshswdwuwaokhghd')
 EMAIL_USE_TLS = True
 
