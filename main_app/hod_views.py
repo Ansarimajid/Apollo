@@ -285,7 +285,22 @@ def edit_notes(request, note_id):
             return redirect('view_notes')
         else:
             messages.error(request, "Please fill the form properly.")
-    return render(request, 'edit_notes.html', {'form': form, 'note': note})
+    return render(request, 'hod_template/edit_notes.html', {'form': form, 'note': note})
+
+def manage_notes(request):
+    all_notes = Note.objects.all()
+    context = {
+        'all_notes': all_notes,
+        'page_title': 'Manage Notes'
+    }
+    return render(request, 'hod_template/manage_notes.html', context)
+
+def delete_notes(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+    note.delete()
+    messages.success(request, "Note deleted successfully!")
+    return redirect('manage_notes')
+
 
 
 def edit_staff_notes(request, note_id):

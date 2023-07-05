@@ -33,7 +33,9 @@ urlpatterns = [
     path('staff/edit_staff_notes/<int:note_id>/', hod_views.edit_staff_notes, name='edit_staff_notes'),
     path('staff/manage_staff_notes/', hod_views.manage_staff_notes, name='manage_staff_notes'),
      path('staff/delete_staff_notes/<int:note_id>/', hod_views.delete_staff_notes, name='delete_staff_notes'),
-
+    path('notes/edit/<int:note_id>/', hod_views.edit_notes, name='edit_notes'),
+    path('notes/manage/', hod_views.manage_notes, name='manage_notes'),
+    path('notes/delete/<int:note_id>/', hod_views.delete_notes, name='delete_notes'),
 
     # Staff
     path("staff/home/", staff_views.staff_home, name='staff_home'),
