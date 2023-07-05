@@ -285,7 +285,7 @@ def edit_notes(request, note_id):
             return redirect('view_notes')
         else:
             messages.error(request, "Please fill the form properly.")
-    return render(request, 'hod_template/edit_notes.html', {'form': form, 'note': note})
+    return render(request, 'hod_template/edit_notes.html', {'form': form, 'note': note ,'page_title': 'Edit Notes'})
 
 def manage_notes(request):
     all_notes = Note.objects.all()
@@ -334,7 +334,7 @@ def edit_staff_notes(request, note_id):
             return redirect(reverse('edit_staff_notes', args=[note_id]))
         else:
             messages.error(request, "Please fill the form properly.")
-    return render(request, 'hod_template/edit_staff_notes.html', {'form': form, 'note': note})
+    return render(request, 'hod_template/edit_staff_notes.html', {'form': form, 'note': note , 'page_title': 'Edit Notes'})
 
 def manage_staff_notes(request):
     all_notes = StaffNote.objects.all()

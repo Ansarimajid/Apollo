@@ -106,6 +106,20 @@
                 </li>  
 
                 <li class="nav-item">
+                    {% url 'manage_staff_notes' as manage_staff_notes %}
+                    {% url 'edit_staff_notes' student_id as edit_staff_notes %}
+
+                    <a href="{{manage_staff_notes}}"
+                        class="nav-link  {% if edit_staff_notes == request.path or manage_staff_notes == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Manage Staff Notes
+
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     {% url 'upload_note' as upload_note %}
                     <a href="{{upload_note}}"
                         class="nav-link {% if upload_note == request.path %} active {% endif %}">
@@ -115,6 +129,20 @@
                         </p>
                     </a>
                 </li>   
+
+                <li class="nav-item">
+                    {% url 'manage_notes' as manage_notes %}
+                    {% url 'edit_notes' student_id as edit_notes %}
+
+                    <a href="{{manage_notes}}"
+                        class="nav-link  {% if edit_notes == request.path or manage_notes == request.path %} active {% endif %}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Manage Student Notes
+
+                        </p>
+                    </a>
+                </li>
 
                 {% elif request.user.user_type == '2' %}
                 <!-- Brand Logo -->
