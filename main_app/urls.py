@@ -29,6 +29,11 @@ urlpatterns = [
     path('admin/upload_notes/', hod_views.upload_note, name='upload_note'),
     path('admin/upload_staff_notes/', hod_views.upload_staff_note,
          name='upload_staff_note'),
+    path('admin/edit_notes/<int:note_id>/', hod_views.edit_notes, name='edit_notes'),
+    path('staff/edit_staff_notes/<int:note_id>/', hod_views.edit_staff_notes, name='edit_staff_notes'),
+    path('staff/manage_staff_notes/', hod_views.manage_staff_notes, name='manage_staff_notes'),
+     path('staff/delete_staff_notes/<int:note_id>/', hod_views.delete_staff_notes, name='delete_staff_notes'),
+
 
     # Staff
     path("staff/home/", staff_views.staff_home, name='staff_home'),
