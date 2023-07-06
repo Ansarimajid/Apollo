@@ -4,7 +4,7 @@ from django.shortcuts import (HttpResponse,
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import StaffForm, StudentForm, StaffNoteForm, NoteForm, AdminForm
-from .models import Student, Staff, CustomUser, Admin
+from .models import Student, Staff, CustomUser, Admin, Note, StaffNote
 
 
 def admin_home(request):
@@ -271,6 +271,84 @@ def edit_student(request, student_id):
         return render(request, "hod_template/edit_student_template.html",
                       context)
 
+def edit_notes(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+    form = NoteForm(request.POST or None, request.FILES or None, instance=note)
+    if request.method == 'POST':
+        if form.is_valid():
+            # Check if a new file is uploaded
+            if 'file' not in request.FILES:
+                form.cleaned_data['file'] = note.file  # Assign the previous file to the form data
+
+            form.save()
+            messages.success(request, "Note updated successfully")
+            return redirect('view_notes')
+        else:
+            messages.error(request, "Please fill the form properly.")
+    return render(request, 'hod_template/edit_notes.html', {'form': form, 'note': note ,'page_title': 'Edit Notes'})
+
+def manage_notes(request):
+    all_notes = Note.objects.all()
+    context = {
+        'all_notes': all_notes,
+        'page_title': 'Manage Notes'
+    }
+    return render(request, 'hod_template/manage_notes.html', context)
+
+def delete_notes(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+    note.delete()
+    messages.success(request, "Note deleted successfully!")
+    return redirect('manage_notes')
+
+
+
+def edit_staff_notes(request, note_id):
+    note = get_object_or_404(StaffNote, id=note_id)
+    form = StaffNoteForm(request.POST or None, request.FILES or None, instance=note)
+
+    # Exclude 'shared_with' field from form validation if not selected
+    form.fields['shared_with'].required = False
+
+    if request.method == 'POST':
+        if form.is_valid():
+            # Check if a new file is uploaded
+            if 'file' not in request.FILES:
+                form.cleaned_data['file'] = note.file  # Assign the previous file to the form data
+
+            # Save the form without committing to the database
+            staff_note = form.save(commit=False)
+
+            # Clear the existing shared_with relationships
+            staff_note.shared_with.clear()
+
+            # Add the selected shared_with staff
+            shared_with_ids = request.POST.getlist('shared_with')
+            shared_with_staff = Staff.objects.filter(id__in=shared_with_ids)
+            staff_note.shared_with.set(shared_with_staff)
+
+            # Save the staff note with updated shared_with relationships
+            staff_note.save()
+
+            messages.success(request, "Staff note updated successfully")
+            return redirect(reverse('edit_staff_notes', args=[note_id]))
+        else:
+            messages.error(request, "Please fill the form properly.")
+    return render(request, 'hod_template/edit_staff_notes.html', {'form': form, 'note': note , 'page_title': 'Edit Notes'})
+
+def manage_staff_notes(request):
+    all_notes = StaffNote.objects.all()
+    context = {
+        'all_notes': all_notes,
+        'page_title': 'Manage Staff Notes'
+    }
+    return render(request, 'hod_template/manage_staff_notes.html', context)
+
+def delete_staff_notes(request, note_id):
+    note = get_object_or_404(StaffNote, id=note_id)
+    note.delete()
+    messages.success(request, "Staff note deleted successfully!")
+    return redirect('manage_staff_notes')
 
 @csrf_exempt
 def check_email_availability(request):
