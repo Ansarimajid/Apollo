@@ -20,7 +20,7 @@ class NoteEditForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = ('title', 'description', 'file', 'grade')
-        
+
 
 class StaffNoteForm(forms.ModelForm):
     shared_with = forms.ModelMultipleChoiceField(
