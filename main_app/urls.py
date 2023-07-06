@@ -41,7 +41,7 @@ urlpatterns = [
     path('notes/manage/', hod_views.manage_notes, name='manage_notes'),
     path('notes/delete/<int:note_id>/', hod_views.delete_notes,
          name='delete_notes'),
-
+     path('create-event/', views.create_event, name='create_event'),
     # Staff
     path("staff/home/", staff_views.staff_home, name='staff_home'),
     path("staff/view/profile/", staff_views.staff_view_profile,

@@ -166,3 +166,12 @@ class StaffNote(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Event(models.Model):
+    title = models.CharField(max_length=255)
+    start_datetime = models.DateTimeField()
+    end_datetime = models.DateTimeField()
+
+    def __str__(self):
+        return self.title

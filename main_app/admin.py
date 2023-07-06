@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Staff, Student, Note, StaffNote
+from .models import CustomUser, Staff, Student, Note, StaffNote, Event
 
 # Register your models here.
 
@@ -14,3 +14,4 @@ admin.site.register(Staff)
 admin.site.register(Student)
 admin.site.register(Note)
 admin.site.register(StaffNote)
+admin.site.register(Event)

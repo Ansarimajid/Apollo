@@ -80,3 +80,59 @@ def logout_user(request):
     if request.user is not None:
         logout(request)
     return redirect("/")
+
+from django.shortcuts import render, redirect
+from .forms import EventForm
+from .models import Event
+
+def create_event(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.save()
+            create_google_calendar_event(event)
+            return redirect('create_event')
+    else:
+        form = EventForm()
+    return render(request, 'hod_template/schedule_meeting.html', {'form': form})
+
+
+import pytz
+import datetime
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+# Your existing code
+service_account_email = "sk-academy@neat-fin-392006.iam.gserviceaccount.com"
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+
+credentials = service_account.Credentials.from_service_account_file('neat.json')
+scoped_credentials = credentials.with_scopes(SCOPES)
+
+
+def build_service():
+    service = build("calendar", "v3", credentials=scoped_credentials)
+    return service
+
+
+def create_google_calendar_event(event):
+    service = build_service()
+
+    start_datetime = event.start_datetime.astimezone(pytz.utc)
+    end_datetime = event.end_datetime.astimezone(pytz.utc)
+    event = (
+        service.events()
+        .insert(
+            calendarId="primary",
+            body={
+                "summary": event.title,
+                "description": "Bar",
+                "start": {"dateTime": start_datetime.isoformat()},
+                "end": {"dateTime": end_datetime.isoformat()},
+            },
+        )
+        .execute()
+    )
+
+    print(event)

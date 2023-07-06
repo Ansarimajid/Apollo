@@ -1,5 +1,5 @@
 from django import forms
-from .models import Note, StaffNote, CustomUser, Student, Admin, Staff
+from .models import Note, StaffNote, CustomUser, Student, Admin, Staff , Event
 
 
 class FormSettings(forms.ModelForm):
@@ -132,3 +132,17 @@ class StaffEditForm(CustomUserForm):
                                                'alternate_phone_no',
                                                'designation',
                                                'mon_sal', 'year_sal']
+
+
+from django import forms
+from django.forms import DateTimeInput
+from .models import Event
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ('title', 'start_datetime', 'end_datetime')
+        widgets = {
+            'start_datetime': DateTimeInput(attrs={'type': 'datetime-local'}),
+            'end_datetime': DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
