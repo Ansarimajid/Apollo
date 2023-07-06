@@ -63,7 +63,7 @@
                     {% url 'edit_staff' staff_id as edit_staff %}
                     <a href="{{manage_staff}}"
                         class="nav-link {% if manage_staff == request.path or request.path == edit_staff %} active {% endif %}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-book-reader"></i>
                         <p>
                             Manage Staff
 
@@ -73,7 +73,7 @@
                 <li class="nav-item">
                     {% url 'add_student' as add_student%}
                     <a href="{{add_student}}" class="nav-link  {% if add_student == request.path %} active {% endif %}">
-                        <i class="nav-icon fas fa-user-plus"></i>
+                        <i class="nav-icon fas fa-user-graduate"></i>
                         <p>
                             Add Student
 
@@ -86,7 +86,7 @@
 
                     <a href="{{manage_student}}"
                         class="nav-link  {% if edit_student == request.path or manage_student == request.path %} active {% endif %}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-book-reader"></i>
                         <p>
                             Manage Student
 
@@ -111,7 +111,7 @@
 
                     <a href="{{manage_staff_notes}}"
                         class="nav-link  {% if edit_staff_notes == request.path or manage_staff_notes == request.path %} active {% endif %}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-edit"></i>
                         <p>
                             Manage Staff Notes
 
@@ -136,7 +136,7 @@
 
                     <a href="{{manage_notes}}"
                         class="nav-link  {% if edit_notes == request.path or manage_notes == request.path %} active {% endif %}">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-edit"></i>
                         <p>
                             Manage Student Notes
 
