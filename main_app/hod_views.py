@@ -83,6 +83,18 @@ def add_student(request):
             board = student_form.cleaned_data.get('board')
             stream = student_form.cleaned_data.get('stream')
             grade = student_form.cleaned_data.get('grade')
+            admission_form_copy = request.FILES.get("admission_form_copy")
+            school_name = student_form.cleaned_data.get("school_name")
+            date_of_birth = student_form.cleaned_data.get("date_of_birth")
+            date_of_admission = student_form.cleaned_data.get("date_of_admission")
+            gender = student_form.cleaned_data.get("gender")
+            handed = student_form.cleaned_data.get("handed")
+            batch_time = student_form.cleaned_data.get("batch_time")
+            father_name = student_form.cleaned_data.get("father_name")
+            father_occupation = student_form.cleaned_data.get("father_occupation")
+            mother_name = student_form.cleaned_data.get("mother_name")
+            mother_occupation  = student_form.cleaned_data.get("mother_occupation")
+
             try:
                 user = CustomUser.objects.create_user(
                     email=email, password=password, user_type=3,
@@ -91,7 +103,18 @@ def add_student(request):
                     admin_id=user.id,
                     defaults={'phone_no': phone_no,
                               'alternate_phone_no': alternate_phone_no,
-                              'board': board, 'stream': stream, 'grade': grade}
+                              'board': board, 'stream': stream, 'grade': grade ,
+                              'admission_form_copy': admission_form_copy,
+                                'school_name': school_name,
+                                'date_of_birth': date_of_birth,
+                                'date_of_admission': date_of_admission,
+                                'gender': gender,
+                                'handed': handed,
+                                'batch_time': batch_time,
+                                'father_name': father_name,
+                                'father_occupation': father_occupation,
+                                'mother_name': mother_name,
+                                'mother_occupation': mother_occupation }
                 )
                 if not created:
                     # Update the existing student record
@@ -100,6 +123,17 @@ def add_student(request):
                     student.board = board
                     student.stream = stream
                     student.grade = grade
+                    student.admission_form_copy = admission_form_copy
+                    student.school_name = school_name
+                    student.date_of_birth = date_of_birth
+                    student.date_of_admission = date_of_admission
+                    student.gender = gender
+                    student.handed = handed
+                    student.batch_time = batch_time
+                    student.father_name = father_name
+                    student.father_occupation = father_occupation
+                    student.mother_name = mother_name
+                    student.mother_occupation = mother_occupation
                     student.save()
 
                 messages.success(request, "Successfully Added")
@@ -246,6 +280,18 @@ def edit_student(request, student_id):
             board = form.cleaned_data.get('board')
             stream = form.cleaned_data.get('stream')
             grade = form.cleaned_data.get('grade')
+            admission_form_copy = request.FILES.get("admission_form_copy")
+            school_name = form.cleaned_data.get("school_name")
+            date_of_birth = form.cleaned_data.get("date_of_birth")
+            date_of_admission = form.cleaned_data.get("date_of_admission")
+            gender = form.cleaned_data.get("gender")
+            handed = form.cleaned_data.get("handed")
+            batch_time = form.cleaned_data.get("batch_time")
+            father_name = form.cleaned_data.get("father_name")
+            father_occupation = form.cleaned_data.get("father_occupation")
+            mother_name = form.cleaned_data.get("mother_name")
+            mother_occupation  = form.cleaned_data.get("mother_occupation")
+
             try:
                 user = CustomUser.objects.get(id=student.admin.id)
                 user.username = username
@@ -259,6 +305,17 @@ def edit_student(request, student_id):
                 student.board = board
                 student.stream = stream
                 student.grade = grade
+                student.admission_form_copy = admission_form_copy
+                student.school_name = school_name
+                student.date_of_birth = date_of_birth
+                student.date_of_admission = date_of_admission
+                student.gender = gender
+                student.handed = handed
+                student.batch_time = batch_time
+                student.father_name = father_name
+                student.father_occupation = father_occupation
+                student.mother_name = mother_name
+                student.mother_occupation = mother_occupation
                 user.save()
                 student.save()
                 messages.success(request, "Successfully Updated")

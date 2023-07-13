@@ -75,19 +75,49 @@ class CustomUserForm(FormSettings):
         fields = ['first_name', 'last_name', 'email', 'password']
 
 
+from django import forms
+from .models import Student
+
 class StudentForm(CustomUserForm):
+    gender = forms.ChoiceField(choices=Student.GENDER_CHOICES)
+    handed = forms.ChoiceField(choices=Student.HANDED_CHOICES)
     board = forms.ChoiceField(choices=Student.BOARD_CHOICES)
     stream = forms.ChoiceField(choices=Student.STREAM_CHOICES)
     grade = forms.ChoiceField(choices=Student.GRADE_CHOICES)
+    admission_form_copy = forms.FileField(required=False)
+    school_name = forms.CharField(max_length=100)
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    date_of_admission = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    batch_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+    father_name = forms.CharField(max_length=100)
+    father_occupation = forms.CharField(max_length=100)
+    mother_name = forms.CharField(max_length=100)
+    mother_occupation = forms.CharField(max_length=100)
 
     def __init__(self, *args, **kwargs):
         super(StudentForm, self).__init__(*args, **kwargs)
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields + ['phone_no',
-                                               'alternate_phone_no',
-                                               'board', 'stream', 'grade']
+        fields = CustomUserForm.Meta.fields + [
+            'phone_no',
+            'alternate_phone_no',
+            'gender',
+            'handed',
+            'board',
+            'stream',
+            'grade',
+            'admission_form_copy',
+            'school_name',
+            'date_of_birth',
+            'date_of_admission',
+            'batch_time',
+            'father_name',
+            'father_occupation',
+            'mother_name',
+            'mother_occupation',
+        ]
+
 
 
 class AdminForm(CustomUserForm):
@@ -117,9 +147,23 @@ class StudentEditForm(CustomUserForm):
 
     class Meta(CustomUserForm.Meta):
         model = Student
-        fields = CustomUserForm.Meta.fields + ['phone_no',
-                                               'alternate_phone_no',
-                                               'board', 'stream', 'grade']
+        fields = CustomUserForm.Meta.fields + [  
+          'phone_no',
+            'alternate_phone_no',
+            'gender',
+            'handed',
+            'board',
+            'stream',
+            'grade',
+            'admission_form_copy',
+            'school_name',
+            'date_of_birth',
+            'date_of_admission',
+            'batch_time',
+            'father_name',
+            'father_occupation',
+            'mother_name',
+            'mother_occupation',]
 
 
 class StaffEditForm(CustomUserForm):

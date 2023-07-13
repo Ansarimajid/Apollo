@@ -90,16 +90,42 @@ class Student(models.Model):
         # Add more choices as needed
     )
 
+    GENDER_CHOICES = (
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Other', 'Other'),
+        # Add more choices as needed
+    )
+
+    HANDED_CHOICES = (
+        ('Right', 'Right'),
+        ('Left', 'Left'),
+        ('Both', 'Both'),
+        # Add more cho
+    )
+
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     payment_status = models.BooleanField(default=False)
     phone_no = models.CharField(max_length=20)
     alternate_phone_no = models.CharField(max_length=20)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    handed = models.CharField(max_length=10, choices=HANDED_CHOICES)
     board = models.CharField(max_length=100, choices=BOARD_CHOICES)
     stream = models.CharField(max_length=100, choices=STREAM_CHOICES)
     grade = models.CharField(max_length=10, choices=GRADE_CHOICES)
+    admission_form_copy = models.FileField(upload_to='admission_forms/',default="admission_forms/default.png")
+    school_name = models.CharField(max_length=100, default="School Name")
+    date_of_birth = models.DateField(default="2000-01-01")
+    date_of_admission = models.DateField(default="2000-01-01")
+    batch_time = models.TimeField(default="00:00:00")
+    father_name = models.CharField(max_length=100, default="Father Name")
+    father_occupation = models.CharField(max_length=100, default="Father Occupation")
+    mother_name = models.CharField(max_length=100, default="Mother Name")
+    mother_occupation = models.CharField(max_length=100, default="Mother Occupation")
 
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
+
 
 
 class Staff(models.Model):
