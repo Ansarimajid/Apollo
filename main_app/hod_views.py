@@ -4,7 +4,7 @@ from django.shortcuts import (HttpResponse,
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import StaffForm, StudentForm, StaffNoteForm, NoteForm, AdminForm
-from .models import Student, Staff, CustomUser, Admin, Note, StaffNote
+from .models import Student, Staff, CustomUser, Admin, Note, StaffNote , Event
 
 
 def admin_home(request):
@@ -35,6 +35,15 @@ def add_staff(request):
             designation = form.cleaned_data.get('designation')
             mon_sal = form.cleaned_data.get('mon_sal')
             year_sal = form.cleaned_data.get('year_sal')
+            address = form.cleaned_data.get('address')
+            subject_expertise = form.cleaned_data.get('subject_expertise')
+            entitled_el = form.cleaned_data.get('entitled_el')
+            al_copy = form.cleaned_data.get('al_copy')
+            date_of_birth = form.cleaned_data.get('date_of_birth')
+            work_time_start = form.cleaned_data.get('work_time_start')
+            work_time_end = form.cleaned_data.get('work_time_end')
+            work_day_from = form.cleaned_data.get('work_day_from')
+            work_day_to = form.cleaned_data.get('work_day_to')
             try:
                 user = CustomUser.objects.create_user(
                     email=email, password=password, user_type=2,
@@ -45,7 +54,16 @@ def add_staff(request):
                     defaults={'phone_no': phone_no,
                               'alternate_phone_no': alternate_phone_no,
                               'designation': designation,
-                              'mon_sal': mon_sal, 'year_sal': year_sal}
+                              'mon_sal': mon_sal, 'year_sal': year_sal,
+                              'address' : address,
+                                'subject_expertise' :subject_expertise,
+                                'entitled_el' :entitled_el,
+                                'al_copy' :al_copy,
+                                'date_of_birth' :date_of_birth,
+                                'work_time_start' :work_time_start,
+                                'work_time_end' :work_time_end,
+                                'work_day_from' :work_day_from,
+                                'work_day_to' :work_day_to}
                 )
 
                 if not created:
@@ -54,6 +72,15 @@ def add_staff(request):
                     staff.designation = designation
                     staff.mon_sal = mon_sal
                     staff.year_sal = year_sal
+                    staff.address = address
+                    staff.subject_expertise  = subject_expertise
+                    staff.entitled_el = entitled_el
+                    staff.al_copy = al_copy
+                    staff.date_of_birth = date_of_birth
+                    staff.work_time_start = work_time_start
+                    staff.work_time_end = work_time_end
+                    staff.work_day_from = work_day_from
+                    staff.work_day_to = work_day_to
                     staff.save()
 
                 messages.success(request, "Successfully Added")
@@ -469,3 +496,69 @@ def delete_student(request, student_id):
     student.delete()
     messages.success(request, "Student deleted successfully!")
     return redirect(reverse('manage_student'))
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Event
+from .forms import EventForm
+
+def event_list(request):
+    events = Event.objects.all()
+    return render(request, 'hod_template/event_list.html', {'events': events ,'page_title': 'Event List'})
+
+def add_event(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('event_list')
+    else:
+        form = EventForm()
+    return render(request, 'hod_template/add_event.html', {'form': form, 'page_title': 'Add Event'})
+
+def edit_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if request.method == 'POST':
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('event_list')
+    else:
+        form = EventForm(instance=event)
+    return render(request, 'hod_template/edit_event.html', {'form': form, 'event_id': event_id,'page_title': 'Edit Event'})
+
+
+def delete_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    event.delete()
+    messages.success(request, "Event deleted successfully!")
+    return redirect(reverse('event_list'))
+
+
+from calendar import HTMLCalendar
+from datetime import datetime
+from django.views.generic import TemplateView
+from .models import Event
+
+class CalendarView(TemplateView):
+    template_name = 'hod_template/calendar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = datetime.now().date()
+        calendar = HTMLCalendar().formatmonth(today.year, today.month)
+        events = Event.objects.filter(date__year=today.year, date__month=today.month)
+        highlighted_calendar = self.apply_highlighting(calendar, today.day, [event.date.day for event in events])
+        context['calendar'] = highlighted_calendar
+        context['events'] = events
+        context['page_title'] = 'Calendar'
+        return context
+    
+    def apply_highlighting(self, cal, today, events_dates):
+        highlighted_cal = cal.replace('>%s</td>' % today, ' class="today">%s</td>' % today)
+        for event_date in events_dates:
+            highlighted_cal = highlighted_cal.replace('>%s</td>' % event_date, ' class="event">%s</td>' % event_date)
+        return highlighted_cal
+
+
+

@@ -128,6 +128,9 @@ class Student(models.Model):
 
 
 
+from django.core.validators import FileExtensionValidator
+from django.db import models
+
 class Staff(models.Model):
     DESIGNATION_CHOICES = (
         ('Assistant', 'Assistant'),
@@ -137,13 +140,22 @@ class Staff(models.Model):
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     phone_no = models.CharField(max_length=20)
     alternate_phone_no = models.CharField(max_length=20)
-    designation = models.CharField(max_length=100,
-                                   choices=DESIGNATION_CHOICES)
+    designation = models.CharField(max_length=100, choices=DESIGNATION_CHOICES)
     mon_sal = models.IntegerField(null=True, blank=True)
     year_sal = models.IntegerField(null=True, blank=True)
+    address = models.CharField(max_length=255, default="")
+    subject_expertise = models.CharField(max_length=100, default="")
+    entitled_el = models.IntegerField(default=0)
+    al_copy = models.FileField(upload_to='al_copies/', default="")
+    date_of_birth = models.DateField(null=True, blank=True)
+    work_time_start = models.TimeField(null=True, blank=True)
+    work_time_end = models.TimeField(null=True, blank=True)
+    work_day_from = models.DateField(null=True, blank=True)
+    work_day_to = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.admin.first_name + " " + self.admin.last_name
+
 
 
 @receiver(post_save, sender=CustomUser)
@@ -192,3 +204,15 @@ class StaffNote(models.Model):
 
     def __str__(self):
         return self.title
+
+class Event(models.Model):
+    title = models.CharField(max_length=100)
+    date = models.DateField()
+    description = models.TextField()
+    shared_with_staff = models.ManyToManyField(Staff, blank=True)
+    board = models.CharField(max_length=20, choices=Student.BOARD_CHOICES, default=1, blank=True, null=True)
+    grade = models.CharField(max_length=20, choices=Student.GRADE_CHOICES, default=1, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
