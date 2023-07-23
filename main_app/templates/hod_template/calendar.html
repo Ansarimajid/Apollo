@@ -1,0 +1,129 @@
+{% extends 'main_app/base.html' %}
+
+{% block content %}
+<style>
+    .calendar-container {
+      margin-top: 20px;
+      max-width: 1000px; /* Adjust the max-width as per your preference */
+      margin-left: auto;
+      margin-right: auto;
+      display: flex; /* Add flex display */
+      justify-content: space-between; /* Adjust spacing between calendar and event table */
+      overflow-x: auto; /* Enable horizontal scrolling for calendar container */
+    }
+    table.calendar {
+      width: fit-content; /* Adjust width of the calendar table */
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    table.calendar th {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ddd;
+      background-color: #f7f7f7;
+    }
+    table.calendar td {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+    table.calendar td.today {
+      background-color: #b3e5fc;
+    }
+    table.calendar td.event {
+      background-color: #c21d1d;
+    }
+    .event-table {
+      width: calc(50% - 10px); /* Adjust width of the event table */
+    }
+    .event-table th,
+    .event-table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .calendar-container {
+        flex-direction: column; /* Display calendar and event list vertically */
+        padding: 0px;
+        overflow-x: hidden; /* Hide horizontal scrollbar on mobile view */
+      }
+      table.calendar {
+        width: 100%; /* Adjust calendar width to full width */
+        margin-bottom: 20px; /* Add margin at the bottom of calendar for spacing */
+        padding: 0px;
+        overflow-x: auto; /* Enable horizontal scrolling for calendar in mobile view */
+      }
+      .event-table {
+        width: 100%; /* Adjust event table width to full width */
+        margin-right: 0; /* Remove right margin for mobile view */
+      }
+
+      table.calendar th {
+        text-align: center;
+        padding: 10px; /* Adjust padding for mobile view */
+        border: 1px solid #ddd;
+        background-color: #f7f7f7;
+        white-space: nowrap; /* Prevent text wrapping in table header */
+      }
+    }
+</style>
+
+<div class="calendar-container">
+  <div style="overflow-x: auto;">
+    <table class="calendar">
+      <caption>{{ calendar|safe }}</caption>
+      <tbody>
+        <!-- Render the calendar here -->
+      </tbody>
+    </table>
+  </div>
+
+  {% if events %}
+    <table class="event-table">
+      <thead>
+        <tr>
+          <th style="padding-left: 20px;">Date</th>
+          <th style="padding-left: 20px;">Title</th>
+          <th style="padding-left: 20px;">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        {% if user.is_superuser %}
+          <tr>
+            <td style="padding-left: 20px;">{{ event.date.day }}</td>
+            <td style="padding-left: 20px;">{{ event.title }}</td>
+            <td style="padding-left: 20px;">{{ event.description }}</td>
+          </tr>
+        {% elif user.staff %}
+          {% if user.staff == event.shared_with_staff.first %}
+            <tr>
+              <td style="padding-left: 20px;">{{ event.date.day }}</td>
+              <td style="padding-left: 20px;">{{ event.title }}</td>
+              <td style="padding-left: 20px;">{{ event.description }}</td>
+            </tr>
+          {% endif %}
+        {% else %}
+          {% if user.student.grade == event.grade and user.student.board == event.board %}
+            <tr>
+              <td style="padding-left: 20px;">{{ event.date.day }}</td>
+              <td style="padding-left: 20px;">{{ event.title }}</td>
+              <td style="padding-left: 20px;">{{ event.description }}</td>
+            </tr>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      
+      
+      
+      
+      
+      </tbody>
+    </table>
+  {% else %}
+    <p>No events found for the current month.</p>
+  {% endif %}
+</div>
+
+{% endblock content %}

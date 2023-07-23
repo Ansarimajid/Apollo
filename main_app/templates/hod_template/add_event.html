@@ -1,9 +1,6 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}Notes{% endblock page_title %}
-
-
-
+{% block page_title %}{{page_title}}{% endblock page_title %}
 {% block content %}
 
 <section class="content">
@@ -15,12 +12,8 @@
                     <div class="card-header">
                         <h3 class="card-title">{{page_title}}</h3>
                     </div>
-                    <form method="post" style="padding-left: 35px; padding-top: 20px; padding-bottom: 20px;" enctype="multipart/form-data">
-                      {% csrf_token %}
-                      {{ form.as_p }}
-                      <button type="submit">Upload</button>
-                    </form>
-                   
+
+                    {% include "main_app/form_template.html" with messages=messages  form=form button_text="Add Event"%}
                 </div>
                 <!-- /.card -->
 
@@ -74,5 +67,5 @@
     background-color: #2e8015;
   }
 </style>
-
 {% endblock content %}
+
