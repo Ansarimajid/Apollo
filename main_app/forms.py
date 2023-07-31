@@ -119,6 +119,7 @@ class StaffForm(CustomUserForm):
     address = forms.CharField(max_length=100)
     subject_expertise = forms.CharField(max_length=100)
     entitled_el = forms.IntegerField()
+    form_copy = forms.FileField(required=False)
     date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     work_time_start = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
     work_time_end = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
@@ -136,6 +137,7 @@ class StaffForm(CustomUserForm):
             'address',
             'subject_expertise',
             'entitled_el',
+            'form_copy',
             'date_of_birth',
             'work_time_start',
             'work_time_end',
@@ -162,6 +164,7 @@ class StaffEditForm(CustomUserForm):
             'address',
             'subject_expertise',
             'entitled_el',
+            'form_copy',
             'date_of_birth',
             'work_time_start',
             'work_time_end',
@@ -180,7 +183,6 @@ class StudentEditForm(CustomUserForm):
             'handed',
             'board',
             'stream',
-            'grade',
             'admission_form_copy',
             'school_name',
             'date_of_birth',

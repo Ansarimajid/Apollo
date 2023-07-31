@@ -38,7 +38,7 @@ def add_staff(request):
             address = staff_form.cleaned_data.get('address')
             subject_expertise = staff_form.cleaned_data.get('subject_expertise')
             entitled_el = staff_form.cleaned_data.get('entitled_el')
-      
+            form_copy = request.FILES.get("form_copy")
             date_of_birth = staff_form.cleaned_data.get('date_of_birth')
             work_time_start = staff_form.cleaned_data.get('work_time_start')
             work_time_end = staff_form.cleaned_data.get('work_time_end')
@@ -58,6 +58,7 @@ def add_staff(request):
                               'address' : address,
                                 'subject_expertise' :subject_expertise,
                                 'entitled_el' :entitled_el,
+                                'form_copy': form_copy,
                                 'date_of_birth' :date_of_birth,
                                 'work_time_start' :work_time_start,
                                 'work_time_end' :work_time_end,
@@ -74,6 +75,7 @@ def add_staff(request):
                     staff.address = address
                     staff.subject_expertise  = subject_expertise
                     staff.entitled_el = entitled_el
+                    staff.form_copy = form_copy
                     staff.date_of_birth = date_of_birth
                     staff.work_time_start = work_time_start
                     staff.work_time_end = work_time_end
@@ -259,6 +261,7 @@ def edit_staff(request, staff_id):
             designation = form.cleaned_data.get('designation')
             mon_sal = form.cleaned_data.get('mon_sal')
             year_sal = form.cleaned_data.get('year_sal')
+            form_copy = request.FILES.get("form_copy")
             try:
                 user = CustomUser.objects.get(id=staff.admin.id)
                 user.username = username
@@ -272,6 +275,7 @@ def edit_staff(request, staff_id):
                 staff.designation = designation
                 staff.mon_sal = mon_sal
                 staff.year_sal = year_sal
+                staff.form_copy = form_copy
                 user.save()
                 staff.save()
                 messages.success(request, "Successfully Updated")

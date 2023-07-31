@@ -134,6 +134,7 @@ class Staff(models.Model):
     address = models.CharField(max_length=255, default="")
     subject_expertise = models.CharField(max_length=100, default="")
     entitled_el = models.IntegerField(default=0)
+    form_copy = models.FileField(upload_to='forms/',default="forms/default.png")
     date_of_birth = models.DateField(null=True, blank=True)
     work_time_start = models.TimeField(null=True, blank=True)
     work_time_end = models.TimeField(null=True, blank=True)
