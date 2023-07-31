@@ -22,28 +22,28 @@ def admin_home(request):
 
 
 def add_staff(request):
-    form = StaffForm(request.POST or None)
-    context = {'form': form, 'page_title': 'Add Staff'}
+    staff_form = StaffForm(request.POST or None)
+    context = {'form': staff_form, 'page_title': 'Add Staff'}
     if request.method == 'POST':
-        if form.is_valid():
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-            phone_no = form.cleaned_data.get('phone_no')
-            alternate_phone_no = form.cleaned_data.get('alternate_phone_no')
-            designation = form.cleaned_data.get('designation')
-            mon_sal = form.cleaned_data.get('mon_sal')
-            year_sal = form.cleaned_data.get('year_sal')
-            address = form.cleaned_data.get('address')
-            subject_expertise = form.cleaned_data.get('subject_expertise')
-            entitled_el = form.cleaned_data.get('entitled_el')
-            al_copy = form.cleaned_data.get('al_copy')
-            date_of_birth = form.cleaned_data.get('date_of_birth')
-            work_time_start = form.cleaned_data.get('work_time_start')
-            work_time_end = form.cleaned_data.get('work_time_end')
-            work_day_from = form.cleaned_data.get('work_day_from')
-            work_day_to = form.cleaned_data.get('work_day_to')
+        if staff_form.is_valid():
+            first_name = staff_form.cleaned_data.get('first_name')
+            last_name = staff_form.cleaned_data.get('last_name')
+            email = staff_form.cleaned_data.get('email')
+            password = staff_form.cleaned_data.get('password')
+            phone_no = staff_form.cleaned_data.get('phone_no')
+            alternate_phone_no = staff_form.cleaned_data.get('alternate_phone_no')
+            designation = staff_form.cleaned_data.get('designation')
+            mon_sal = staff_form.cleaned_data.get('mon_sal')
+            year_sal = staff_form.cleaned_data.get('year_sal')
+            address = staff_form.cleaned_data.get('address')
+            subject_expertise = staff_form.cleaned_data.get('subject_expertise')
+            entitled_el = staff_form.cleaned_data.get('entitled_el')
+      
+            date_of_birth = staff_form.cleaned_data.get('date_of_birth')
+            work_time_start = staff_form.cleaned_data.get('work_time_start')
+            work_time_end = staff_form.cleaned_data.get('work_time_end')
+            work_day_from = staff_form.cleaned_data.get('work_day_from')
+            work_day_to = staff_form.cleaned_data.get('work_day_to')
             try:
                 user = CustomUser.objects.create_user(
                     email=email, password=password, user_type=2,
@@ -58,7 +58,6 @@ def add_staff(request):
                               'address' : address,
                                 'subject_expertise' :subject_expertise,
                                 'entitled_el' :entitled_el,
-                                'al_copy' :al_copy,
                                 'date_of_birth' :date_of_birth,
                                 'work_time_start' :work_time_start,
                                 'work_time_end' :work_time_end,
@@ -75,7 +74,6 @@ def add_staff(request):
                     staff.address = address
                     staff.subject_expertise  = subject_expertise
                     staff.entitled_el = entitled_el
-                    staff.al_copy = al_copy
                     staff.date_of_birth = date_of_birth
                     staff.work_time_start = work_time_start
                     staff.work_time_end = work_time_end

@@ -105,13 +105,13 @@
             </tr>
           {% endif %}
         {% else %}
-          {% if user.student.grade == event.grade and user.student.board == event.board %}
-            <tr>
-              <td style="padding-left: 20px;">{{ event.date.day }}</td>
-              <td style="padding-left: 20px;">{{ event.title }}</td>
-              <td style="padding-left: 20px;">{{ event.description }}</td>
-            </tr>
-          {% endif %}
+        {% if user.student.grade in event.grade.all and user.student.board in event.board.all %}
+        <tr>
+          <td style="padding-left: 20px;">{{ event.date.day }}</td>
+          <td style="padding-left: 20px;">{{ event.title }}</td>
+          <td style="padding-left: 20px;">{{ event.description }}</td>
+        </tr>
+      {% endif %}
         {% endif %}
       {% endfor %}
       

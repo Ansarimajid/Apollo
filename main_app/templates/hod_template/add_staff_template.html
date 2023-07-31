@@ -1,6 +1,5 @@
 {% extends 'main_app/base.html' %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
 {% block custom_css %}
   <style>
       .invalid{
@@ -15,6 +14,8 @@
       }
   </style>
 {% endblock custom_css %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
 {% block content %}
 
 <section class="content">
@@ -58,6 +59,7 @@
                 }
                 else{
                     $(".email_error").remove()
+
                     $("<span class='valid email_error'>Email Address Available</span>").insertAfter("#id_email");
                 }
             }).fail(function(response){
