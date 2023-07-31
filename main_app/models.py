@@ -175,6 +175,8 @@ class Note(models.Model):
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
                                     default=1)
     grade = models.ManyToManyField(Grade, blank=True)
+    board = models.ManyToManyField(Board, blank=True)
+    stream = models.ManyToManyField(Stream, blank=True)
 
     def __str__(self):
         return self.title

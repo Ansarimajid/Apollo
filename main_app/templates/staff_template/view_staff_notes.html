@@ -2,7 +2,17 @@
 {% load static %}
 {% block page_title %}Notes{% endblock page_title %}
 {% block content %}
-
+<style>
+    /* This style will apply only on devices with a maximum width of 768 pixels (mobile view) */
+    @media (max-width: 768px) {
+        .card-body {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 1.25rem;
+            overflow-x: auto;
+        }
+    }
+</style>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -31,6 +41,7 @@
                                     <th>Actions</th>
                                 </tr>
                                 {% for note in notes %}
+                                {% if user.staff %}
                                 <tr>
                                     <td>{{ forloop.counter }}.</td>
                                     <td>{{ note.title }}</td>
@@ -40,6 +51,7 @@
                                         <a class="note-download-link" href="{{ note.file.url }}">Download {{ note.file.name|slice:'-3:' }}</a>
                                     </td>
                                 </tr>
+                                {% endif %}
                                 {% endfor %}
                             </table>
                         </div>

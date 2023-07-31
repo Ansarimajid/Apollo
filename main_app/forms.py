@@ -17,9 +17,21 @@ class NoteForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
+    board = forms.ModelMultipleChoiceField(
+        queryset=Board.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    stream = forms.ModelMultipleChoiceField(
+        queryset=Stream.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    
     class Meta:
         model = Note
-        fields = ('title', 'description', 'file', 'grade')
+        fields = ('title', 'description', 'file', 'grade', 'board', 'stream')
 
 
 class NoteEditForm(forms.ModelForm):

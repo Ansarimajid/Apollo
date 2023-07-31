@@ -4,6 +4,17 @@
 {% block page_title %}{{ page_title }}{% endblock page_title %}
 
 {% block content %}
+<style>
+    /* This style will apply only on devices with a maximum width of 768 pixels (mobile view) */
+    @media (max-width: 768px) {
+        .card-body {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 1.25rem;
+            overflow-x: auto;
+        }
+    }
+</style>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
