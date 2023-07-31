@@ -12,6 +12,11 @@ class FormSettings(forms.ModelForm):
 
 
 class NoteForm(forms.ModelForm):
+    grade = forms.ModelMultipleChoiceField(
+        queryset=Grade.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
     class Meta:
         model = Note
         fields = ('title', 'description', 'file', 'grade')
