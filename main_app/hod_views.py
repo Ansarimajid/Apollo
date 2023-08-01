@@ -603,8 +603,9 @@ class CalendarView(TemplateView):
         calendar = MyHTMLCalendar(self.get_filtered_events(), self.request.user).formatmonth(today.year, today.month)
         events = Event.objects.filter(date__year=today.year, date__month=today.month)
         context['calendar'] = calendar
+        context['today'] = today
         context['events'] = events
-        context['page_title'] = 'Calendar'
+        context['page_title'] = 'Academic Calendar'
         return context
 
 
