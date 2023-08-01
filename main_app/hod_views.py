@@ -542,25 +542,71 @@ from datetime import datetime
 from django.views.generic import TemplateView
 from .models import Event
 
+from calendar import HTMLCalendar
+from datetime import datetime
+from django.views.generic import TemplateView
+from .models import Event
+
+class MyHTMLCalendar(HTMLCalendar):
+    def __init__(self, events, user):
+        super().__init__()  # Call super() with no arguments
+        self.events = self.group_events_by_day(events)
+        self.user = user
+
+    def group_events_by_day(self, events):
+        events_by_day = {}
+        for event in events:
+            day = event.date.day
+            if day in events_by_day:
+                events_by_day[day].append(event)
+            else:
+                events_by_day[day] = [event]
+        return events_by_day
+
+    def formatday(self, day, weekday):
+        if day == 0:
+            return '<td class="noday">&nbsp;</td>'  # Empty cell for days not in this month
+
+        events = self.events.get(day, [])
+        today = datetime.now().day
+
+        if day == today and not events:  # If it's today and there are no events
+            return '<td class="today">%d</td>' % day
+        elif day == today or events:  # If it's today or there are events
+            return '<td class="event">%d</td>' % day
+        else:  # For other days without events
+            return '<td>%d</td>' % day
+
+from datetime import datetime, timedelta
+from django.db.models import Q
 class CalendarView(TemplateView):
     template_name = 'hod_template/calendar.html'
+
+    def get_filtered_events(self):
+        user = self.request.user
+        today = datetime.now().date()
+        start_of_month = today.replace(day=1)
+        end_of_month = today.replace(day=1, month=today.month + 1) - timedelta(days=1)
+
+        if user.is_superuser:
+            return Event.objects.filter(date__range=[start_of_month, end_of_month]).order_by('date')
+        elif user.staff:
+            return Event.objects.filter()
+        elif user.student:
+            return Event.objects.filter()
+        else:
+            return Event.objects.none()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = datetime.now().date()
-        calendar = HTMLCalendar().formatmonth(today.year, today.month)
+        calendar = MyHTMLCalendar(self.get_filtered_events(), self.request.user).formatmonth(today.year, today.month)
         events = Event.objects.filter(date__year=today.year, date__month=today.month)
-        highlighted_calendar = self.apply_highlighting(calendar, today.day, [event.date.day for event in events])
-        context['calendar'] = highlighted_calendar
+        context['calendar'] = calendar
         context['events'] = events
         context['page_title'] = 'Calendar'
         return context
-    
-    def apply_highlighting(self, cal, today, events_dates):
-        highlighted_cal = cal.replace('>%s</td>' % today, ' class="today">%s</td>' % today)
-        for event_date in events_dates:
-            highlighted_cal = highlighted_cal.replace('>%s</td>' % event_date, ' class="event">%s</td>' % event_date)
-        return highlighted_cal
+
 
 
 
