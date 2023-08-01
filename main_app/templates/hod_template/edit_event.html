@@ -45,7 +45,7 @@
       display: block;
       font-weight: bold;
     }
-  
+    input[type="date"],
     input[type="text"],
     input[type="file"] {
       width: 100%;
@@ -62,6 +62,14 @@
       border-radius: 4px;
       cursor: pointer;
     }
+
+    textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Allow vertical resizing of textarea */
+  }
   
     button[type="submit"]:hover {
       background-color: #2e8015;
