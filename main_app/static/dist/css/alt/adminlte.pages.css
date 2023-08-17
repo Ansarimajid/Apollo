@@ -262,7 +262,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 
 .login-card-body .input-group .form-control.is-valid ~ .input-group-append .input-group-text,
 .register-card-body .input-group .form-control.is-valid ~ .input-group-append .input-group-text {
-  border-color: #0fc220;
+  border-color: #65fe08;
 }
 
 .login-card-body .input-group .form-control.is-invalid:focus,
