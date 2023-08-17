@@ -93,6 +93,7 @@ class CustomUserForm(FormSettings):
 class StudentForm(CustomUserForm):
     gender = forms.ChoiceField(choices=Student.GENDER_CHOICES)
     handed = forms.ChoiceField(choices=Student.HANDED_CHOICES)
+    addmission_form_fees_paid = forms.ChoiceField(choices=Student.FEE_PAID)
     board = forms.ModelChoiceField(queryset=Board.objects.all())
     stream = forms.ModelChoiceField(queryset=Stream.objects.all())
     grade = forms.ModelChoiceField(queryset=Grade.objects.all())
@@ -125,6 +126,7 @@ class StudentForm(CustomUserForm):
             'father_occupation',
             'mother_name',
             'mother_occupation',
+            'addmission_form_fees_paid'
         ]
 
 

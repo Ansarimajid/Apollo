@@ -98,6 +98,11 @@ class Student(models.Model):
         # Add more choices as needed
     )
 
+    FEE_PAID = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+    )
+
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     payment_status = models.BooleanField(default=False)
     phone_no = models.CharField(max_length=20)
@@ -116,6 +121,7 @@ class Student(models.Model):
     father_occupation = models.CharField(max_length=100, default="Father Occupation")
     mother_name = models.CharField(max_length=100, default="Mother Name")
     mother_occupation = models.CharField(max_length=100, default="Mother Occupation")
+    addmission_form_fees_paid = models.CharField(max_length=10, choices=FEE_PAID, default="No")
 
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name

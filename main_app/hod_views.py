@@ -130,6 +130,7 @@ def add_student(request):
             fs = FileSystemStorage()
             filename = fs.save(passport.name, passport)
             passport_url = fs.url(filename)
+            addmission_form_fees_paid = student_form.cleaned_data.get("addmission_form_fees_paid")
 
             try:
                 user = CustomUser.objects.create_user(
@@ -151,7 +152,8 @@ def add_student(request):
                                 'father_name': father_name,
                                 'father_occupation': father_occupation,
                                 'mother_name': mother_name,
-                                'mother_occupation': mother_occupation }
+                                'mother_occupation': mother_occupation,
+                                'addmission_form_fees_paid': addmission_form_fees_paid }
                 )
                 if not created:
                     # Update the existing student record
@@ -171,6 +173,7 @@ def add_student(request):
                     student.father_occupation = father_occupation
                     student.mother_name = mother_name
                     student.mother_occupation = mother_occupation
+                    student.addmission_form_fees_paid = addmission_form_fees_paid
                     student.save()
 
                 messages.success(request, "Successfully Added")
@@ -337,6 +340,7 @@ def edit_student(request, student_id):
             mother_name = form.cleaned_data.get("mother_name")
             mother_occupation  = form.cleaned_data.get("mother_occupation")
             passport = request.FILES.get('profile_pic') or None
+            addmission_form_fees_paid = form.cleaned_data.get("addmission_form_fees_paid")
 
             try:
                 user = CustomUser.objects.get(id=student.admin.id)
@@ -367,6 +371,7 @@ def edit_student(request, student_id):
                 student.father_occupation = father_occupation
                 student.mother_name = mother_name
                 student.mother_occupation = mother_occupation
+                student.addmission_form_fees_paid = addmission_form_fees_paid
                 user.save()
                 student.save()
                 messages.success(request, "Successfully Updated")
