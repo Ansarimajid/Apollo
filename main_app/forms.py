@@ -59,6 +59,7 @@ class CustomUserForm(FormSettings):
     widget = {
         'password': forms.PasswordInput(),
     }
+    profile_pic = forms.ImageField()
 
     def __init__(self, *args, **kwargs):
         super(CustomUserForm, self).__init__(*args, **kwargs)
@@ -86,7 +87,7 @@ class CustomUserForm(FormSettings):
 
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'password']
+        fields = ['first_name', 'last_name', 'email', 'password','profile_pic']
 
 
 class StudentForm(CustomUserForm):
