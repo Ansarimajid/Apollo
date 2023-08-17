@@ -12,8 +12,8 @@
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image" style="margin-top: 5px;margin-left: 6px;">
-                <i class="nav-icon fas fa-user"></i>
+            <div class="image">
+                <img src="{{ request.user.profile_pic}}" class="img-circle elevation-2" >
             </div>
             <div class="info">
                 <a href="#" class="d-block" style="color: black;">{{user}}</a>
@@ -228,9 +228,8 @@
                 <div class="sidebar">
                     <!-- Sidebar user panel (optional) -->
                     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                        
-                        <div class="image" style="margin-top: 5px;margin-left: 6px;">
-                            <i class="nav-icon fas fa-user"></i>
+                        <div class="image">
+                            <img src="{{ request.user.profile_pic}}" class="img-circle elevation-2" >
                         </div>
                         <div class="info">
                             <a href="#" class="d-block font-weight-bold" style="color: black;">{{ user}}</a>
@@ -301,8 +300,8 @@
                             <div class="sidebar">
                                 <!-- Sidebar user panel (optional) -->
                                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                                    <div class="image" style="margin-top: 5px;margin-left: 6px;">
-                                        <i class="nav-icon fas fa-user"></i>
+                                    <div class="image">
+                                        <img src="{{ request.user.profile_pic}}" class="img-circle elevation-2" >
                                     </div>
                                     <div class="info">
                                         <a href="#" class="d-block font-weight-bold" style="color: black;">{{user}}</a>

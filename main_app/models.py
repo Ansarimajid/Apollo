@@ -34,6 +34,7 @@ class CustomUser(AbstractUser):
     username = None  # Removed username, using email instead
     email = models.EmailField(unique=True)
     user_type = models.CharField(default=1, choices=USER_TYPE, max_length=1)
+    profile_pic = models.ImageField()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
@@ -81,7 +82,6 @@ class Grade(models.Model):
     def __str__(self):
         return self.name
 
-
 class Student(models.Model):
     GENDER_CHOICES = (
         ('Male', 'Male'),
@@ -95,6 +95,11 @@ class Student(models.Model):
         ('Left', 'Left'),
         ('Both', 'Both'),
         # Add more choices as needed
+    )
+
+    FEE_PAID = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
     )
 
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -115,15 +120,25 @@ class Student(models.Model):
     father_occupation = models.CharField(max_length=100, default="Father Occupation")
     mother_name = models.CharField(max_length=100, default="Mother Name")
     mother_occupation = models.CharField(max_length=100, default="Mother Occupation")
+    addmission_form_fees_paid = models.CharField(max_length=10, choices=FEE_PAID, default="No")
 
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
 
 class Staff(models.Model):
     DESIGNATION_CHOICES = (
-        ('Assistant', 'Assistant'),
-        ('Teacher', 'Teacher'),
-        ('Faculty', 'Faculty'),
+        ('Helper', 'Helper'),
+        ('Faculty/Teacher', 'Faculty/Teacher'),
+    )
+    SUBJECT_CHOICES = (
+        ('Science', 'Science'),
+        ('English', 'English'),
+        ('Maths', 'Maths'),
+        ('Hindi', 'Hindi'),
+        ('SST', 'SST'),
+        ('EVS', 'EVS'),
+        ('ECO/BS/CA', 'ECO/BS/CA'),
+        ('Accounts', 'Accounts'),
     )
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     phone_no = models.CharField(max_length=20)
@@ -132,7 +147,7 @@ class Staff(models.Model):
     mon_sal = models.IntegerField(null=True, blank=True)
     year_sal = models.IntegerField(null=True, blank=True)
     address = models.CharField(max_length=255, default="")
-    subject_expertise = models.CharField(max_length=100, default="")
+    subject_expertise = models.CharField(max_length=100, choices=SUBJECT_CHOICES)
     entitled_el = models.IntegerField(default=0)
     form_copy = models.FileField(upload_to='forms/',default="forms/default.png")
     date_of_birth = models.DateField(null=True, blank=True)

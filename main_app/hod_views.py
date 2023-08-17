@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import StaffForm, StudentForm, StaffNoteForm, NoteForm, AdminForm
 from .models import Student, Staff, CustomUser, Admin, Note, StaffNote , Event
-
+from django.core.files.storage import FileSystemStorage
 
 def admin_home(request):
     total_staff = Staff.objects.all().count()
@@ -22,7 +22,7 @@ def admin_home(request):
 
 
 def add_staff(request):
-    staff_form = StaffForm(request.POST or None)
+    staff_form = StaffForm(request.POST or None, request.FILES or None)
     context = {'form': staff_form, 'page_title': 'Add Staff'}
     if request.method == 'POST':
         if staff_form.is_valid():
@@ -44,10 +44,15 @@ def add_staff(request):
             work_time_end = staff_form.cleaned_data.get('work_time_end')
             work_day_from = staff_form.cleaned_data.get('work_day_from')
             work_day_to = staff_form.cleaned_data.get('work_day_to')
+            passport = request.FILES.get('profile_pic')
+            fs = FileSystemStorage()
+            filename = fs.save(passport.name, passport)
+            passport_url = fs.url(filename)
             try:
                 user = CustomUser.objects.create_user(
                     email=email, password=password, user_type=2,
-                    first_name=first_name, last_name=last_name)
+                    first_name=first_name, last_name=last_name,
+                    profile_pic=passport_url)
 
                 staff, created = Staff.objects.get_or_create(
                     admin_id=user.id,
@@ -91,12 +96,12 @@ def add_staff(request):
 
         else:
             messages.error(request, "Please fulfill all requirements")
-    print(request.POST)
+    # print(request.POST)
     return render(request, 'hod_template/add_staff_template.html', context)
 
 
 def add_student(request):
-    student_form = StudentForm(request.POST or None)
+    student_form = StudentForm(request.POST or None,request.FILES or None)
     context = {'form': student_form, 'page_title': 'Add Student'}
     if request.method == 'POST':
         if student_form.is_valid():
@@ -121,11 +126,17 @@ def add_student(request):
             father_occupation = student_form.cleaned_data.get("father_occupation")
             mother_name = student_form.cleaned_data.get("mother_name")
             mother_occupation  = student_form.cleaned_data.get("mother_occupation")
+            passport = request.FILES['profile_pic']
+            fs = FileSystemStorage()
+            filename = fs.save(passport.name, passport)
+            passport_url = fs.url(filename)
+            addmission_form_fees_paid = student_form.cleaned_data.get("addmission_form_fees_paid")
 
             try:
                 user = CustomUser.objects.create_user(
                     email=email, password=password, user_type=3,
-                    first_name=first_name, last_name=last_name)
+                    first_name=first_name, last_name=last_name,
+                    profile_pic=passport_url)
                 student, created = Student.objects.get_or_create(
                     admin_id=user.id,
                     defaults={'phone_no': phone_no,
@@ -141,7 +152,8 @@ def add_student(request):
                                 'father_name': father_name,
                                 'father_occupation': father_occupation,
                                 'mother_name': mother_name,
-                                'mother_occupation': mother_occupation }
+                                'mother_occupation': mother_occupation,
+                                'addmission_form_fees_paid': addmission_form_fees_paid }
                 )
                 if not created:
                     # Update the existing student record
@@ -161,6 +173,7 @@ def add_student(request):
                     student.father_occupation = father_occupation
                     student.mother_name = mother_name
                     student.mother_occupation = mother_occupation
+                    student.addmission_form_fees_paid = addmission_form_fees_paid
                     student.save()
 
                 messages.success(request, "Successfully Added")
@@ -262,12 +275,18 @@ def edit_staff(request, staff_id):
             mon_sal = form.cleaned_data.get('mon_sal')
             year_sal = form.cleaned_data.get('year_sal')
             form_copy = request.FILES.get("form_copy")
+            passport = request.FILES.get('profile_pic') or None
             try:
                 user = CustomUser.objects.get(id=staff.admin.id)
                 user.username = username
                 user.email = email
                 if password is not None:
                     user.set_password(password)
+                if passport != None:
+                    fs = FileSystemStorage()
+                    filename = fs.save(passport.name, passport)
+                    passport_url = fs.url(filename)
+                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
                 staff.phone_no = phone_no
@@ -320,6 +339,8 @@ def edit_student(request, student_id):
             father_occupation = form.cleaned_data.get("father_occupation")
             mother_name = form.cleaned_data.get("mother_name")
             mother_occupation  = form.cleaned_data.get("mother_occupation")
+            passport = request.FILES.get('profile_pic') or None
+            addmission_form_fees_paid = form.cleaned_data.get("addmission_form_fees_paid")
 
             try:
                 user = CustomUser.objects.get(id=student.admin.id)
@@ -327,6 +348,11 @@ def edit_student(request, student_id):
                 user.email = email
                 if password is not None:
                     user.set_password(password)
+                if passport != None:
+                    fs = FileSystemStorage()
+                    filename = fs.save(passport.name, passport)
+                    passport_url = fs.url(filename)
+                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
                 student.phone_no = phone_no
@@ -345,6 +371,7 @@ def edit_student(request, student_id):
                 student.father_occupation = father_occupation
                 student.mother_name = mother_name
                 student.mother_occupation = mother_occupation
+                student.addmission_form_fees_paid = addmission_form_fees_paid
                 user.save()
                 student.save()
                 messages.success(request, "Successfully Updated")
@@ -470,9 +497,15 @@ def admin_view_profile(request):
                 first_name = form.cleaned_data.get('first_name')
                 last_name = form.cleaned_data.get('last_name')
                 password = form.cleaned_data.get('password') or None
+                passport = request.FILES.get('profile_pic') or None
                 custom_user = admin.admin
                 if password is not None:
                     custom_user.set_password(password)
+                if passport != None:
+                    fs = FileSystemStorage()
+                    filename = fs.save(passport.name, passport)
+                    passport_url = fs.url(filename)
+                    custom_user.profile_pic = passport_url
                 custom_user.first_name = first_name
                 custom_user.last_name = last_name
                 custom_user.save()

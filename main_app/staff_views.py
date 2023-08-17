@@ -50,8 +50,8 @@ class CalendarViewStaff(CalendarView):
         start_of_month = today.replace(day=1)
         end_of_month = today.replace(day=1, month=today.month + 1) - timedelta(days=1)
         user = self.request.user
-        print(user)
-        print(user.staff)
+        # print(user)
+        # print(user.staff)
         return Event.objects.filter(date__range=[start_of_month, end_of_month],shared_with_staff=user.staff)
     
 

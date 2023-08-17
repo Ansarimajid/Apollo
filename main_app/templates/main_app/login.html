@@ -24,40 +24,69 @@
 <style>
     /* Define your CSS styles for the header */
     
+/* Common styles for header */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #65fe08;
+    padding: 10px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000; /* Ensure the header stays on top */
+}
+
+/* Social icons styles */
+.social-icons {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.social-icons li {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.social-icons li a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+/* Mobile view styles */
+@media only screen and (max-width: 768px) {
     header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        /* background-image: linear-gradient(to right top,rgb(217, 217, 217), rgb(128 209 123), rgb(0 197 7), rgb(84 207 85), rgb(188, 232, 236)); */
-        background-color: #65fe08;
-        padding: 10px;
-        color: white;
-        display: flex;
-        justify-content: space-between;
+        padding: 5px;
+        flex-direction: column;
         align-items: center;
+        text-align: center;
+    }
+    header h1 {
+        text-align: center;
     }
 
     .social-icons {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
+        margin-top: 5px;
     }
 
     .social-icons li {
-        display: inline-block;
-        margin-left: 10px;
+        margin-left: 5px;
     }
 
     .social-icons li a {
-        color: white;
-        text-decoration: none;
-        font-size: 20px;
+        font-size: 16px;
     }
 
     body {
-        margin-top: 60px; /* Adjust the margin-top value to leave space for the fixed header */
+        margin-top: 50px; /* Adjust the margin-top value for mobile view */
     }
+}
+    
 </style>
 
 <body class="hold-transition login-page" style="background-image: url('{% static 'dist/img/bg.jpg' %}'); background-size: cover;">
