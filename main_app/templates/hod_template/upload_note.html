@@ -36,7 +36,7 @@
   }
 
   .card-header {
-    background-color: #0fc220;
+    background-color: #65fe08;
     color: #fff;
   }
 
@@ -55,14 +55,14 @@
 
   input[type="text"],
   input[type="file"] {
-    width: 100%;
+    width: 97%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
 
   button[type="submit"] {
-    background-color: #0fc220;
+    background-color: #65fe08;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -73,6 +73,23 @@
   button[type="submit"]:hover {
     background-color: #2e8015;
   }
+  textarea {
+    width: 97%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Allow vertical resizing of textarea */
+  }
+
+  @media (max-width: 768px) {
+        input[type="text"],
+        input[type="file"] {
+          width: 90%;
+        }
+        textarea {
+          width: 90%;
+        }
+    }
 </style>
 
 {% endblock content %}

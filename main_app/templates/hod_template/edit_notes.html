@@ -23,48 +23,65 @@
 </section>
 
 <style>
-    /* CSS for the interactive UI */
-    .card {
-      margin-top: 0px;
+  /* CSS for the interactive UI */
+  .card {
+    margin-top: 0px;
+  }
+
+  .card-header {
+    background-color: #65fe08;
+    color: #fff;
+  }
+
+  .card-title {
+    margin: 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+  }
+
+  input[type="text"],
+  input[type="file"] {
+    width: 97%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button[type="submit"] {
+    background-color: #65fe08;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #2e8015;
+  }
+  textarea {
+    width: 97%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Allow vertical resizing of textarea */
+  }
+
+  @media (max-width: 768px) {
+        input[type="text"],
+        input[type="file"] {
+          width: 90%;
+        }
+        textarea {
+          width: 90%;
+        }
     }
-  
-    .card-header {
-      background-color: #0fc220;
-      color: #fff;
-    }
-  
-    .card-title {
-      margin: 0;
-    }
-  
-    .form-group {
-      margin-bottom: 20px;
-    }
-  
-    label {
-      display: block;
-      font-weight: bold;
-    }
-  
-    input[type="text"],
-    input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-  
-    button[type="submit"] {
-      background-color: #0fc220;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  
-    button[type="submit"]:hover {
-      background-color: #2e8015;
-    }
-  </style>
+</style>
 {% endblock content %}

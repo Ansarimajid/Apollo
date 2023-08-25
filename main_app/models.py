@@ -34,6 +34,7 @@ class CustomUser(AbstractUser):
     username = None  # Removed username, using email instead
     email = models.EmailField(unique=True)
     user_type = models.CharField(default=1, choices=USER_TYPE, max_length=1)
+    profile_pic = models.ImageField()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
@@ -58,38 +59,30 @@ class CustomUser(AbstractUser):
 class Admin(models.Model):
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
 
+from django.db import models
+from django.core.validators import FileExtensionValidator
+
+from django.db import models
+
+class Board(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Stream(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Grade(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class Student(models.Model):
-    BOARD_CHOICES = (
-        ('CBSE', 'CBSE'),
-        ('ICSE', 'ICSE'),
-        ('State Board', 'State Board'),
-        # Add more choices as needed
-    )
-
-    STREAM_CHOICES = (
-        ('Science', 'Science'),
-        ('Commerce', 'Commerce'),
-        ('Arts', 'Arts'),
-        # Add more choices as needed
-    )
-
-    GRADE_CHOICES = (
-        ('1st', '1st'),
-        ('2nd', '2nd'),
-        ('3rd', '3rd'),
-        ('4th', '4th'),
-        ('5th', '5th'),
-        ('6th', '6th'),
-        ('7th', '7th'),
-        ('8th', '8th'),
-        ('9th', '9th'),
-        ('10th', '10th'),
-        ('11th', '11th'),
-        ('12th', '12th'),
-        # Add more choices as needed
-    )
-
     GENDER_CHOICES = (
         ('Male', 'Male'),
         ('Female', 'Female'),
@@ -101,7 +94,12 @@ class Student(models.Model):
         ('Right', 'Right'),
         ('Left', 'Left'),
         ('Both', 'Both'),
-        # Add more cho
+        # Add more choices as needed
+    )
+
+    FEE_PAID = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
     )
 
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -110,9 +108,9 @@ class Student(models.Model):
     alternate_phone_no = models.CharField(max_length=20)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     handed = models.CharField(max_length=10, choices=HANDED_CHOICES)
-    board = models.CharField(max_length=100, choices=BOARD_CHOICES)
-    stream = models.CharField(max_length=100, choices=STREAM_CHOICES)
-    grade = models.CharField(max_length=10, choices=GRADE_CHOICES)
+    board = models.ForeignKey(Board, on_delete=models.SET_NULL, null=True)
+    stream = models.ForeignKey(Stream, on_delete=models.SET_NULL, null=True)
+    grade = models.ForeignKey(Grade, on_delete=models.SET_NULL, null=True)
     admission_form_copy = models.FileField(upload_to='admission_forms/',default="admission_forms/default.png")
     school_name = models.CharField(max_length=100, default="School Name")
     date_of_birth = models.DateField(default="2000-01-01")
@@ -122,20 +120,21 @@ class Student(models.Model):
     father_occupation = models.CharField(max_length=100, default="Father Occupation")
     mother_name = models.CharField(max_length=100, default="Mother Name")
     mother_occupation = models.CharField(max_length=100, default="Mother Occupation")
+    addmission_form_fees_paid = models.CharField(max_length=10, choices=FEE_PAID, default="No")
 
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
 
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
 
-
-from django.core.validators import FileExtensionValidator
-from django.db import models
+    def __str__(self):
+        return self.name
 
 class Staff(models.Model):
     DESIGNATION_CHOICES = (
-        ('Assistant', 'Assistant'),
-        ('Teacher', 'Teacher'),
-        ('Faculty', 'Faculty'),
+        ('Helper', 'Helper'),
+        ('Faculty/Teacher', 'Faculty/Teacher'),
     )
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     phone_no = models.CharField(max_length=20)
@@ -144,9 +143,9 @@ class Staff(models.Model):
     mon_sal = models.IntegerField(null=True, blank=True)
     year_sal = models.IntegerField(null=True, blank=True)
     address = models.CharField(max_length=255, default="")
-    subject_expertise = models.CharField(max_length=100, default="")
+    subject_expertise = models.ManyToManyField(Subject, blank=True)
     entitled_el = models.IntegerField(default=0)
-    al_copy = models.FileField(upload_to='al_copies/', default="")
+    form_copy = models.FileField(upload_to='forms/',default="forms/default.png")
     date_of_birth = models.DateField(null=True, blank=True)
     work_time_start = models.TimeField(null=True, blank=True)
     work_time_end = models.TimeField(null=True, blank=True)
@@ -186,8 +185,9 @@ class Note(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
                                     default=1)
-    grade = models.CharField(max_length=10, choices=Student.GRADE_CHOICES,
-                             default=1)
+    grade = models.ManyToManyField(Grade, blank=True)
+    board = models.ManyToManyField(Board, blank=True)
+    stream = models.ManyToManyField(Stream, blank=True)
 
     def __str__(self):
         return self.title
@@ -205,14 +205,17 @@ class StaffNote(models.Model):
     def __str__(self):
         return self.title
 
+from django.db import models
+
 class Event(models.Model):
     title = models.CharField(max_length=100)
     date = models.DateField()
     description = models.TextField()
     shared_with_staff = models.ManyToManyField(Staff, blank=True)
-    board = models.CharField(max_length=20, choices=Student.BOARD_CHOICES, default=1, blank=True, null=True)
-    grade = models.CharField(max_length=20, choices=Student.GRADE_CHOICES, default=1, blank=True, null=True)
+    board = models.ManyToManyField(Board, blank=True)
+    grade = models.ManyToManyField(Grade, blank=True)
 
     def __str__(self):
         return self.title
+
 

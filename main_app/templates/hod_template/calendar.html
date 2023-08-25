@@ -1,5 +1,6 @@
 {% extends 'main_app/base.html' %}
-
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
 {% block content %}
 <style>
     .calendar-container {
@@ -31,7 +32,10 @@
       background-color: #b3e5fc;
     }
     table.calendar td.event {
-      background-color: #c21d1d;
+      background-color: #073ef16c;
+    }
+    table.calendar tbody {
+      font-size: auto;
     }
     .event-table {
       width: calc(50% - 10px); /* Adjust width of the event table */
@@ -41,7 +45,6 @@
       padding: 10px;
       border: 1px solid #ddd;
     }
-
     @media only screen and (max-width: 768px) {
       .calendar-container {
         flex-direction: column; /* Display calendar and event list vertically */
@@ -59,6 +62,10 @@
         margin-right: 0; /* Remove right margin for mobile view */
       }
 
+      .event-table tr{
+        font-size: 13px;
+      }
+
       table.calendar th {
         text-align: center;
         padding: 10px; /* Adjust padding for mobile view */
@@ -66,64 +73,90 @@
         background-color: #f7f7f7;
         white-space: nowrap; /* Prevent text wrapping in table header */
       }
+
+      table.calendar th {
+      text-align: center;
+      padding: 5.5px;
+      border: 1px solid #ddd;
+      background-color: #f7f7f7;
+    }
+    table.calendar td {
+      text-align: center;
+      padding: 5.5px;
+      border: 1px solid #ddd;
+    }
+
     }
 </style>
 
-<div class="calendar-container">
-  <div style="overflow-x: auto;">
-    <table class="calendar">
-      <caption>{{ calendar|safe }}</caption>
-      <tbody>
-        <!-- Render the calendar here -->
-      </tbody>
-    </table>
-  </div>
 
-  {% if events %}
-    <table class="event-table">
-      <thead>
-        <tr>
-          <th style="padding-left: 20px;">Date</th>
-          <th style="padding-left: 20px;">Title</th>
-          <th style="padding-left: 20px;">Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for event in events %}
-        {% if user.is_superuser %}
-          <tr>
-            <td style="padding-left: 20px;">{{ event.date.day }}</td>
-            <td style="padding-left: 20px;">{{ event.title }}</td>
-            <td style="padding-left: 20px;">{{ event.description }}</td>
-          </tr>
-        {% elif user.staff %}
-          {% if user.staff == event.shared_with_staff.first %}
-            <tr>
-              <td style="padding-left: 20px;">{{ event.date.day }}</td>
-              <td style="padding-left: 20px;">{{ event.title }}</td>
-              <td style="padding-left: 20px;">{{ event.description }}</td>
-            </tr>
-          {% endif %}
-        {% else %}
-          {% if user.student.grade == event.grade and user.student.board == event.board %}
-            <tr>
-              <td style="padding-left: 20px;">{{ event.date.day }}</td>
-              <td style="padding-left: 20px;">{{ event.title }}</td>
-              <td style="padding-left: 20px;">{{ event.description }}</td>
-            </tr>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-      
-      
-      
-      
-      
-      </tbody>
-    </table>
-  {% else %}
-    <p>No events found for the current month.</p>
-  {% endif %}
-</div>
+
+<div>
+  <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card card-dark">
+                      <div class="card-header">
+                          <h3 class="card-title">Today's Date - ( {{ today }} ) </h3>
+                      </div>
+                      <div class="card-body">
+                          <!-- Display the rendered calendar with highlighting -->
+                          <div class="calendar-container" style="overflow-x: auto;">
+                            <div style="overflow-x: auto;">
+                              <table class="calendar">
+                                <caption >{{ calendar|safe }}</caption>
+                              </table>
+                            </div>
+                          
+                          {% if events %}
+                            <table  class="event-table">
+                              <thead>
+                                <tr>
+                                  <th style="padding-left: 20px;">Date</th>
+                                  <th style="padding-left: 20px;">Title</th>
+                                  <th style="padding-left: 20px;">Description</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for event in events|dictsort:"date" %}
+                                  {% if user.is_superuser %}
+                                    <tr>
+                                      <td style="padding-left: 20px;">{{ event.date.day }}</td>
+                                      <td style="padding-left: 20px;">{{ event.title }}</td>
+                                      <td style="padding-left: 20px;">{{ event.description }}</td>
+                                    </tr>
+                                  {% elif user.staff %}
+                                    {% if user.staff in event.shared_with_staff.all %}
+                                      <tr>
+                                        <td style="padding-left: 20px;">{{ event.date.day }}</td>
+                                        <td style="padding-left: 20px;">{{ event.title }}</td>
+                                        <td style="padding-left: 20px;">{{ event.description }}</td>
+                                      </tr>
+                                    {% endif %}
+                                  {% else %}
+                                    {% if user.student.grade in event.grade.all and user.student.board in event.board.all %}
+                                      <tr>
+                                        <td style="padding-left: 20px;">{{ event.date.day }}</td>
+                                        <td style="padding-left: 20px;">{{ event.title }}</td>
+                                        <td style="padding-left: 20px;">{{ event.description }}</td>
+                                      </tr>
+                                    {% endif %}
+                                  {% endif %}
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          {% else %}
+                            <p>No events found for the current month.</p>
+                          {% endif %}
+                          
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  </div>
 
 {% endblock content %}

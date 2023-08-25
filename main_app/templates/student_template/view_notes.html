@@ -2,6 +2,17 @@
 {% load static %}
 {% block page_title %}Notes{% endblock page_title %}
 {% block content %}
+<style>
+    /* This style will apply only on devices with a maximum width of 768 pixels (mobile view) */
+    @media (max-width: 768px) {
+        .card-body {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 1.25rem;
+            overflow-x: auto;
+        }
+    }
+</style>
 
 <section class="content">
     <div class="container-fluid">
@@ -15,7 +26,7 @@
 
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-x: auto;"></div>
 
                         <div class="form-group">
                             <input type="text" id="search-input" class="form-control" placeholder="Search notes">
@@ -31,15 +42,18 @@
                                     <th>Actions</th>
                                 </tr>
                                 {% for note in notes %}
+                                {% if user.student.grade in note.grade.all and user.student.board in note.board.all and user.student.stream in note.stream.all %}
                                 <tr>
                                     <td>{{ forloop.counter }}.</td>
                                     <td>{{ note.title }}</td>
                                     <td>{{ note.description }}</td>
                                     <td>{{ note.uploaded_by }}</td>
                                     <td>
+                                        <iframe src="{{ note.file.url }}#zoom=85&scrollbar=0&toolbar=0&navpanes=0" style="width: 100%; height: 650px; border: none;"></iframe>
                                         <a class="note-download-link" href="{{ note.file.url }}">Download {{ note.file.name|slice:'-3:' }}</a>
                                     </td>
                                 </tr>
+                                {% endif %}
                                 {% endfor %}
                             </table>
                         </div>

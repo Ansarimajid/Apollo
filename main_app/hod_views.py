@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import StaffForm, StudentForm, StaffNoteForm, NoteForm, AdminForm
 from .models import Student, Staff, CustomUser, Admin, Note, StaffNote , Event
-
+from django.core.files.storage import FileSystemStorage
 
 def admin_home(request):
     total_staff = Staff.objects.all().count()
@@ -22,32 +22,37 @@ def admin_home(request):
 
 
 def add_staff(request):
-    form = StaffForm(request.POST or None)
-    context = {'form': form, 'page_title': 'Add Staff'}
+    staff_form = StaffForm(request.POST or None, request.FILES or None)
+    context = {'form': staff_form, 'page_title': 'Add Staff'}
     if request.method == 'POST':
-        if form.is_valid():
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-            phone_no = form.cleaned_data.get('phone_no')
-            alternate_phone_no = form.cleaned_data.get('alternate_phone_no')
-            designation = form.cleaned_data.get('designation')
-            mon_sal = form.cleaned_data.get('mon_sal')
-            year_sal = form.cleaned_data.get('year_sal')
-            address = form.cleaned_data.get('address')
-            subject_expertise = form.cleaned_data.get('subject_expertise')
-            entitled_el = form.cleaned_data.get('entitled_el')
-            al_copy = form.cleaned_data.get('al_copy')
-            date_of_birth = form.cleaned_data.get('date_of_birth')
-            work_time_start = form.cleaned_data.get('work_time_start')
-            work_time_end = form.cleaned_data.get('work_time_end')
-            work_day_from = form.cleaned_data.get('work_day_from')
-            work_day_to = form.cleaned_data.get('work_day_to')
+        if staff_form.is_valid():
+            first_name = staff_form.cleaned_data.get('first_name')
+            last_name = staff_form.cleaned_data.get('last_name')
+            email = staff_form.cleaned_data.get('email')
+            password = staff_form.cleaned_data.get('password')
+            phone_no = staff_form.cleaned_data.get('phone_no')
+            alternate_phone_no = staff_form.cleaned_data.get('alternate_phone_no')
+            designation = staff_form.cleaned_data.get('designation')
+            mon_sal = staff_form.cleaned_data.get('mon_sal')
+            year_sal = staff_form.cleaned_data.get('year_sal')
+            address = staff_form.cleaned_data.get('address')
+            subject_expertise_queryset = staff_form.cleaned_data.get('subject_expertise')
+            entitled_el = staff_form.cleaned_data.get('entitled_el')
+            form_copy = request.FILES.get("form_copy")
+            date_of_birth = staff_form.cleaned_data.get('date_of_birth')
+            work_time_start = staff_form.cleaned_data.get('work_time_start')
+            work_time_end = staff_form.cleaned_data.get('work_time_end')
+            work_day_from = staff_form.cleaned_data.get('work_day_from')
+            work_day_to = staff_form.cleaned_data.get('work_day_to')
+            passport = request.FILES.get('profile_pic')
+            fs = FileSystemStorage()
+            filename = fs.save(passport.name, passport)
+            passport_url = fs.url(filename)
             try:
                 user = CustomUser.objects.create_user(
                     email=email, password=password, user_type=2,
-                    first_name=first_name, last_name=last_name)
+                    first_name=first_name, last_name=last_name,
+                    profile_pic=passport_url)
 
                 staff, created = Staff.objects.get_or_create(
                     admin_id=user.id,
@@ -56,9 +61,9 @@ def add_staff(request):
                               'designation': designation,
                               'mon_sal': mon_sal, 'year_sal': year_sal,
                               'address' : address,
-                                'subject_expertise' :subject_expertise,
+                                'subject_expertise' :subject_expertise_queryset,
                                 'entitled_el' :entitled_el,
-                                'al_copy' :al_copy,
+                                'form_copy': form_copy,
                                 'date_of_birth' :date_of_birth,
                                 'work_time_start' :work_time_start,
                                 'work_time_end' :work_time_end,
@@ -73,9 +78,9 @@ def add_staff(request):
                     staff.mon_sal = mon_sal
                     staff.year_sal = year_sal
                     staff.address = address
-                    staff.subject_expertise  = subject_expertise
+                    staff.subject_expertise.set(subject_expertise_queryset)
                     staff.entitled_el = entitled_el
-                    staff.al_copy = al_copy
+                    staff.form_copy = form_copy
                     staff.date_of_birth = date_of_birth
                     staff.work_time_start = work_time_start
                     staff.work_time_end = work_time_end
@@ -91,12 +96,12 @@ def add_staff(request):
 
         else:
             messages.error(request, "Please fulfill all requirements")
-    print(request.POST)
+    # print(request.POST)
     return render(request, 'hod_template/add_staff_template.html', context)
 
 
 def add_student(request):
-    student_form = StudentForm(request.POST or None)
+    student_form = StudentForm(request.POST or None,request.FILES or None)
     context = {'form': student_form, 'page_title': 'Add Student'}
     if request.method == 'POST':
         if student_form.is_valid():
@@ -121,11 +126,17 @@ def add_student(request):
             father_occupation = student_form.cleaned_data.get("father_occupation")
             mother_name = student_form.cleaned_data.get("mother_name")
             mother_occupation  = student_form.cleaned_data.get("mother_occupation")
+            passport = request.FILES['profile_pic']
+            fs = FileSystemStorage()
+            filename = fs.save(passport.name, passport)
+            passport_url = fs.url(filename)
+            addmission_form_fees_paid = student_form.cleaned_data.get("addmission_form_fees_paid")
 
             try:
                 user = CustomUser.objects.create_user(
                     email=email, password=password, user_type=3,
-                    first_name=first_name, last_name=last_name)
+                    first_name=first_name, last_name=last_name,
+                    profile_pic=passport_url)
                 student, created = Student.objects.get_or_create(
                     admin_id=user.id,
                     defaults={'phone_no': phone_no,
@@ -141,7 +152,8 @@ def add_student(request):
                                 'father_name': father_name,
                                 'father_occupation': father_occupation,
                                 'mother_name': mother_name,
-                                'mother_occupation': mother_occupation }
+                                'mother_occupation': mother_occupation,
+                                'addmission_form_fees_paid': addmission_form_fees_paid }
                 )
                 if not created:
                     # Update the existing student record
@@ -161,6 +173,7 @@ def add_student(request):
                     student.father_occupation = father_occupation
                     student.mother_name = mother_name
                     student.mother_occupation = mother_occupation
+                    student.addmission_form_fees_paid = addmission_form_fees_paid
                     student.save()
 
                 messages.success(request, "Successfully Added")
@@ -261,12 +274,27 @@ def edit_staff(request, staff_id):
             designation = form.cleaned_data.get('designation')
             mon_sal = form.cleaned_data.get('mon_sal')
             year_sal = form.cleaned_data.get('year_sal')
+            address = form.cleaned_data.get('address')
+            subject_expertise_queryset = form.cleaned_data.get('subject_expertise')
+            entitled_el = form.cleaned_data.get('entitled_el')
+            form_copy = request.FILES.get("form_copy")
+            date_of_birth = form.cleaned_data.get('date_of_birth')
+            work_time_start = form.cleaned_data.get('work_time_start')
+            work_time_end = form.cleaned_data.get('work_time_end')
+            work_day_from = form.cleaned_data.get('work_day_from')
+            work_day_to = form.cleaned_data.get('work_day_to')
+            passport = request.FILES.get('profile_pic') or None
             try:
                 user = CustomUser.objects.get(id=staff.admin.id)
                 user.username = username
                 user.email = email
                 if password is not None:
                     user.set_password(password)
+                if passport != None:
+                    fs = FileSystemStorage()
+                    filename = fs.save(passport.name, passport)
+                    passport_url = fs.url(filename)
+                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
                 staff.phone_no = phone_no
@@ -274,6 +302,15 @@ def edit_staff(request, staff_id):
                 staff.designation = designation
                 staff.mon_sal = mon_sal
                 staff.year_sal = year_sal
+                staff.address = address
+                staff.subject_expertise.set(subject_expertise_queryset)
+                staff.entitled_el = entitled_el
+                staff.form_copy = form_copy
+                staff.date_of_birth = date_of_birth
+                staff.work_time_start = work_time_start
+                staff.work_time_end = work_time_end
+                staff.work_day_from = work_day_from
+                staff.work_day_to = work_day_to
                 user.save()
                 staff.save()
                 messages.success(request, "Successfully Updated")
@@ -318,6 +355,8 @@ def edit_student(request, student_id):
             father_occupation = form.cleaned_data.get("father_occupation")
             mother_name = form.cleaned_data.get("mother_name")
             mother_occupation  = form.cleaned_data.get("mother_occupation")
+            passport = request.FILES.get('profile_pic') or None
+            addmission_form_fees_paid = form.cleaned_data.get("addmission_form_fees_paid")
 
             try:
                 user = CustomUser.objects.get(id=student.admin.id)
@@ -325,6 +364,11 @@ def edit_student(request, student_id):
                 user.email = email
                 if password is not None:
                     user.set_password(password)
+                if passport != None:
+                    fs = FileSystemStorage()
+                    filename = fs.save(passport.name, passport)
+                    passport_url = fs.url(filename)
+                    user.profile_pic = passport_url
                 user.first_name = first_name
                 user.last_name = last_name
                 student.phone_no = phone_no
@@ -343,6 +387,7 @@ def edit_student(request, student_id):
                 student.father_occupation = father_occupation
                 student.mother_name = mother_name
                 student.mother_occupation = mother_occupation
+                student.addmission_form_fees_paid = addmission_form_fees_paid
                 user.save()
                 student.save()
                 messages.success(request, "Successfully Updated")
@@ -468,9 +513,15 @@ def admin_view_profile(request):
                 first_name = form.cleaned_data.get('first_name')
                 last_name = form.cleaned_data.get('last_name')
                 password = form.cleaned_data.get('password') or None
+                passport = request.FILES.get('profile_pic') or None
                 custom_user = admin.admin
                 if password is not None:
                     custom_user.set_password(password)
+                if passport != None:
+                    fs = FileSystemStorage()
+                    filename = fs.save(passport.name, passport)
+                    passport_url = fs.url(filename)
+                    custom_user.profile_pic = passport_url
                 custom_user.first_name = first_name
                 custom_user.last_name = last_name
                 custom_user.save()
@@ -540,25 +591,72 @@ from datetime import datetime
 from django.views.generic import TemplateView
 from .models import Event
 
+from calendar import HTMLCalendar
+from datetime import datetime
+from django.views.generic import TemplateView
+from .models import Event
+
+class MyHTMLCalendar(HTMLCalendar):
+    def __init__(self, events, user):
+        super().__init__()  # Call super() with no arguments
+        self.events = self.group_events_by_day(events)
+        self.user = user
+
+    def group_events_by_day(self, events):
+        events_by_day = {}
+        for event in events:
+            day = event.date.day
+            if day in events_by_day:
+                events_by_day[day].append(event)
+            else:
+                events_by_day[day] = [event]
+        return events_by_day
+
+    def formatday(self, day, weekday):
+        if day == 0:
+            return '<td class="noday">&nbsp;</td>'  # Empty cell for days not in this month
+
+        events = self.events.get(day, [])
+        today = datetime.now().day
+
+        if day == today and not events:  # If it's today and there are no events
+            return '<td class="today">%d</td>' % day
+        elif day == today or events:  # If it's today or there are events
+            return '<td class="event">%d</td>' % day
+        else:  # For other days without events
+            return '<td>%d</td>' % day
+
+from datetime import datetime, timedelta
+from django.db.models import Q
 class CalendarView(TemplateView):
     template_name = 'hod_template/calendar.html'
+
+    def get_filtered_events(self):
+        user = self.request.user
+        today = datetime.now().date()
+        start_of_month = today.replace(day=1)
+        end_of_month = today.replace(day=1, month=today.month + 1) - timedelta(days=1)
+
+        if user.is_superuser:
+            return Event.objects.filter(date__range=[start_of_month, end_of_month]).order_by('date')
+        elif user.staff:
+            return Event.objects.filter()
+        elif user.student:
+            return Event.objects.filter()
+        else:
+            return Event.objects.none()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = datetime.now().date()
-        calendar = HTMLCalendar().formatmonth(today.year, today.month)
+        calendar = MyHTMLCalendar(self.get_filtered_events(), self.request.user).formatmonth(today.year, today.month)
         events = Event.objects.filter(date__year=today.year, date__month=today.month)
-        highlighted_calendar = self.apply_highlighting(calendar, today.day, [event.date.day for event in events])
-        context['calendar'] = highlighted_calendar
+        context['calendar'] = calendar
+        context['today'] = today
         context['events'] = events
-        context['page_title'] = 'Calendar'
+        context['page_title'] = 'Academic Calendar'
         return context
-    
-    def apply_highlighting(self, cal, today, events_dates):
-        highlighted_cal = cal.replace('>%s</td>' % today, ' class="today">%s</td>' % today)
-        for event_date in events_dates:
-            highlighted_cal = highlighted_cal.replace('>%s</td>' % event_date, ' class="event">%s</td>' % event_date)
-        return highlighted_cal
+
 
 
 

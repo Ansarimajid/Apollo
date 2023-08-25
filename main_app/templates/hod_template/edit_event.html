@@ -23,48 +23,92 @@
 </section>
 
 <style>
-    /* CSS for the interactive UI */
-    .card {
-      margin-top: 0px;
-    }
-  
-    .card-header {
-      background-color: #0fc220;
-      color: #fff;
-    }
-  
-    .card-title {
-      margin: 0;
-    }
-  
-    .form-group {
-      margin-bottom: 20px;
-    }
-  
-    label {
-      display: block;
-      font-weight: bold;
-    }
-  
-    input[type="text"],
-    input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-  
-    button[type="submit"] {
-      background-color: #0fc220;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  
-    button[type="submit"]:hover {
-      background-color: #2e8015;
-    }
-  </style>
+  /* CSS for the interactive UI */
+  .card {
+    margin-top: 0px;
+  }
+
+  .card-header {
+    background-color: #65fe08;
+    color: #fff;
+  }
+
+  .card-title {
+    margin: 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+  }
+  input[type="date"],
+  input[type="text"],
+  input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button[type="submit"] {
+    background-color: #65fe08;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Allow vertical resizing of textarea */
+}
+
+  button[type="submit"]:hover {
+    background-color: #2e8015;
+  }
+  /* Existing styles */
+
+  /* CSS for checkboxes */
+  input[type="checkbox"] {
+    margin-right: 0px; /* Add some spacing between the checkbox and its label */
+    appearance: none; /* Remove default checkbox appearance */
+    -webkit-appearance: none; /* For Safari */
+    -moz-appearance: none; /* For Firefox */
+  }
+
+  /* Style the checkbox indicator */
+  input[type="checkbox"]::before {
+    content: ""; /* This is necessary for the checkbox to appear */
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #fff; /* Default background color for unchecked state */
+    margin-right: 5px; /* Add some spacing between the checkbox and its label */
+    vertical-align: middle;
+    position: relative;
+    top: 0  px; /* Adjust the vertical alignment as needed */
+  }
+
+  /* Style the checkbox when it is checked */
+  input[type="checkbox"]:checked::before {
+    background-color: #65fe08; /* Change the background color for checked state */
+    border-color: #65fe08; /* Change the border color for checked state */
+    content: "\f00c"; /* Use a checkmark icon (Unicode character) when checked */
+    font-family: FontAwesome; /* Use the FontAwesome font (or any font with a checkmark icon) */
+    font-size: 12px; /* Adjust the font size as needed */
+    color: #fff; /* Color for the checkmark icon */
+    padding-left: 2px; /* Adjust the position of the checkmark icon */
+  }
+
+</style>
 {% endblock content %}
