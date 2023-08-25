@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Staff, Student, Note, StaffNote, Event, Board, Grade, Stream
+from .models import CustomUser, Staff, Student, Note, StaffNote, Event, Board, Grade, Stream, Subject
 
 # Register your models here.
 
@@ -18,3 +18,4 @@ admin.site.register(Event)
 admin.site.register(Board)
 admin.site.register(Grade)
 admin.site.register(Stream)
+admin.site.register(Subject)

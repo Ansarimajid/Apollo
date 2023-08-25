@@ -36,7 +36,7 @@ def add_staff(request):
             mon_sal = staff_form.cleaned_data.get('mon_sal')
             year_sal = staff_form.cleaned_data.get('year_sal')
             address = staff_form.cleaned_data.get('address')
-            subject_expertise = staff_form.cleaned_data.get('subject_expertise')
+            subject_expertise_queryset = staff_form.cleaned_data.get('subject_expertise')
             entitled_el = staff_form.cleaned_data.get('entitled_el')
             form_copy = request.FILES.get("form_copy")
             date_of_birth = staff_form.cleaned_data.get('date_of_birth')
@@ -61,7 +61,7 @@ def add_staff(request):
                               'designation': designation,
                               'mon_sal': mon_sal, 'year_sal': year_sal,
                               'address' : address,
-                                'subject_expertise' :subject_expertise,
+                                'subject_expertise' :subject_expertise_queryset,
                                 'entitled_el' :entitled_el,
                                 'form_copy': form_copy,
                                 'date_of_birth' :date_of_birth,
@@ -78,7 +78,7 @@ def add_staff(request):
                     staff.mon_sal = mon_sal
                     staff.year_sal = year_sal
                     staff.address = address
-                    staff.subject_expertise  = subject_expertise
+                    staff.subject_expertise.set(subject_expertise_queryset)
                     staff.entitled_el = entitled_el
                     staff.form_copy = form_copy
                     staff.date_of_birth = date_of_birth
@@ -274,7 +274,15 @@ def edit_staff(request, staff_id):
             designation = form.cleaned_data.get('designation')
             mon_sal = form.cleaned_data.get('mon_sal')
             year_sal = form.cleaned_data.get('year_sal')
+            address = form.cleaned_data.get('address')
+            subject_expertise_queryset = form.cleaned_data.get('subject_expertise')
+            entitled_el = form.cleaned_data.get('entitled_el')
             form_copy = request.FILES.get("form_copy")
+            date_of_birth = form.cleaned_data.get('date_of_birth')
+            work_time_start = form.cleaned_data.get('work_time_start')
+            work_time_end = form.cleaned_data.get('work_time_end')
+            work_day_from = form.cleaned_data.get('work_day_from')
+            work_day_to = form.cleaned_data.get('work_day_to')
             passport = request.FILES.get('profile_pic') or None
             try:
                 user = CustomUser.objects.get(id=staff.admin.id)
@@ -294,7 +302,15 @@ def edit_staff(request, staff_id):
                 staff.designation = designation
                 staff.mon_sal = mon_sal
                 staff.year_sal = year_sal
+                staff.address = address
+                staff.subject_expertise.set(subject_expertise_queryset)
+                staff.entitled_el = entitled_el
                 staff.form_copy = form_copy
+                staff.date_of_birth = date_of_birth
+                staff.work_time_start = work_time_start
+                staff.work_time_end = work_time_end
+                staff.work_day_from = work_day_from
+                staff.work_day_to = work_day_to
                 user.save()
                 staff.save()
                 messages.success(request, "Successfully Updated")

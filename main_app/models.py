@@ -125,20 +125,16 @@ class Student(models.Model):
     def __str__(self):
         return self.admin.last_name + ", " + self.admin.first_name
 
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Staff(models.Model):
     DESIGNATION_CHOICES = (
         ('Helper', 'Helper'),
         ('Faculty/Teacher', 'Faculty/Teacher'),
-    )
-    SUBJECT_CHOICES = (
-        ('Science', 'Science'),
-        ('English', 'English'),
-        ('Maths', 'Maths'),
-        ('Hindi', 'Hindi'),
-        ('SST', 'SST'),
-        ('EVS', 'EVS'),
-        ('ECO/BS/CA', 'ECO/BS/CA'),
-        ('Accounts', 'Accounts'),
     )
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     phone_no = models.CharField(max_length=20)
@@ -147,7 +143,7 @@ class Staff(models.Model):
     mon_sal = models.IntegerField(null=True, blank=True)
     year_sal = models.IntegerField(null=True, blank=True)
     address = models.CharField(max_length=255, default="")
-    subject_expertise = models.CharField(max_length=100, choices=SUBJECT_CHOICES)
+    subject_expertise = models.ManyToManyField(Subject, blank=True)
     entitled_el = models.IntegerField(default=0)
     form_copy = models.FileField(upload_to='forms/',default="forms/default.png")
     date_of_birth = models.DateField(null=True, blank=True)
