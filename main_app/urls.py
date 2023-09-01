@@ -64,4 +64,7 @@ urlpatterns = [
          name='student_view_profile'),
     path('student/view_notes/', student_views.view_notes, name='view_notes'),
      path('student_calendar/', CalendarViewStudent.as_view(), name='calendarstudent'),
+
+    path('staff_view_pdf/<int:note_id>/', staff_views.staff_view_pdf, name='staff_view_pdf'),
+    path('student_view_pdf/<int:note_id>/', student_views.student_view_pdf, name='student_view_pdf'),
 ]

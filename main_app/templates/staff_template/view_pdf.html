@@ -1,0 +1,37 @@
+<!-- <div id="adobe-dc-view"></div>
+<script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
+<script type="text/javascript">
+	document.addEventListener("adobe_dc_view_sdk.ready", function(){ 
+		var adobeDCView = new AdobeDC.View({clientId: "6d23bc7cb5944bcd861d20a43dee2f91", divId: "adobe-dc-view"});
+		var pdfUrl = "{{ note.file.url }}";
+		var pdfFileName = "{{ note.title }}";
+
+		adobeDCView.previewFile({
+			content:{location: {url: pdfUrl}},
+			metaData:{fileName: pdfFileName}
+		}, {showAnnotationTools: false, showDownloadPDF: false, showPrintPDF: false});
+	});
+</script> -->
+<div id="adobe-dc-view"></div>
+<script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
+<script type="text/javascript">
+    // Define a function to initialize the PDF viewer
+    function initializePDFViewer() {
+        var adobeDCView = new AdobeDC.View({ clientId: "6d23bc7cb5944bcd861d20a43dee2f91", divId: "adobe-dc-view" });
+        var pdfUrl = "{{ note.file.url }}";
+        var pdfFileName = "{{ note.title }}";
+
+        adobeDCView.previewFile({
+            content: { location: { url: pdfUrl } },
+            metaData: { fileName: pdfFileName }
+        }, { showAnnotationTools: false, showDownloadPDF: false, showPrintPDF: false });
+    }
+
+    // Add an event listener for when the Adobe DC View SDK is ready
+    document.addEventListener("adobe_dc_view_sdk.ready", initializePDFViewer);
+
+    // Check if the SDK is already ready (in case it loaded before this script)
+    if (window.AdobeDC) {
+        initializePDFViewer();
+    }
+</script>
