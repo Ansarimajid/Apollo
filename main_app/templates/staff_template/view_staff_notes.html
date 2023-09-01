@@ -48,7 +48,7 @@
                                     <td>{{ note.description }}</td>
                                     <td>{{ note.uploaded_by }}</td>
                                     <td>
-                                        <a class="note-download-link" href="{{ note.file.url }}">Download {{ note.file.name|slice:'-3:' }}</a>
+                                        <a class="note-view-link" href="{% url 'staff_view_pdf' note.id %}">View</a>
                                     </td>
                                 </tr>
                                 {% endif %}

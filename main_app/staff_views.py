@@ -15,6 +15,22 @@ def view_staff_notes(request):
         # Handle the case if the user is not authenticated or not a staff
         return HttpResponse("You are not authorized to view this page.")
 
+from django.shortcuts import render, get_object_or_404
+from .models import StaffNote  # Import your StaffNote model or adjust the import as needed
+
+def staff_view_pdf(request, note_id):
+    # Retrieve the note object based on the note_id or return a 404 if not found
+    note = get_object_or_404(StaffNote, id=note_id)
+
+    # Prepare the context data with the PDF URL and filename
+    context = {
+        'note': note,
+    }
+
+    return render(request, 'staff_template/view_pdf.html', context)
+
+
+
 
 def staff_home(request):
     staff = get_object_or_404(Staff, admin=request.user)
